@@ -1,24 +1,15 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import P5DesignCanvas from './P5DesignCanvas';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <p>Try 1</p>
+      <P5DesignCanvas />
+      <p>Try 2</p>
+      <P5DesignCanvas />
+      <p>Try 3</p>
+      <P5DesignCanvas />
     </div>
   );
 }
