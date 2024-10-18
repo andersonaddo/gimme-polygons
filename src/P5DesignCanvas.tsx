@@ -1,16 +1,22 @@
 import './App.css';
 import { useEffect, useRef } from 'react';
 import p5 from 'p5';
+import { makeLayers } from './p5_image_generation/grids';
 
 function sketch(p: p5) {
+    //Once at setup
     p.setup = function () {
-        p.createCanvas(400, 400);
+        const image = makeLayers()
+        p.createCanvas(image.width, image.height)
         p.background(0);
-        p.circle(200, 200, 400);
+        for (const layer of image.layers) {
+            layer.draw(p)
+        }
     }
 
+    //Every frame
     p.draw = function () {
-        //TODO
+
     }
 }
 
@@ -22,7 +28,7 @@ function P5DesignCanvas() {
             const p5Instance = new p5(sketch, p5ContainerRef.current);
             return () => p5Instance.remove();
         }
-    }, []);
+    }, [p5ContainerRef]);
 
     return (
         <div ref={p5ContainerRef} />
