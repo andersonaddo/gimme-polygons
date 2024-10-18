@@ -1,10 +1,10 @@
 import { CircleLayer } from "./layers"
 import { Image } from "./types"
 
-export const makeLayers = (): Image => {
+export const generateImageDefinition = (width: number, height: number): Image => {
     return {
-        height: 300,
-        width: 1000,
+        height,
+        width,
         layers: [
             new CircleLayer(),
             new CircleLayer(),

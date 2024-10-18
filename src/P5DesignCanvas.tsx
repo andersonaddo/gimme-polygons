@@ -1,12 +1,12 @@
 import './App.css';
 import { useEffect, useRef } from 'react';
 import p5 from 'p5';
-import { makeLayers } from './p5_image_generation/grids';
+import { generateImageDefinition } from './p5_image_generation/grids';
 
 function sketch(p: p5) {
     //Once at setup
     p.setup = function () {
-        const image = makeLayers()
+        const image = generateImageDefinition(1000, 300)
         p.createCanvas(image.width, image.height)
         p.background(0);
         for (const layer of image.layers) {
