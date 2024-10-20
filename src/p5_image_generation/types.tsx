@@ -1,9 +1,5 @@
-import p5 from "p5"
+import { type Layer } from "./layers"
 
-export enum LayerType {
-    Circle,
-    Square,
-}
 
 export interface Image {
     height: number
@@ -18,15 +14,9 @@ export interface ColorScheme {
     colors: string[]
 }
 
-export abstract class Layer {
-    type: LayerType
-    colorScheme: ColorScheme
-
-    constructor(type: LayerType, colorScheme: ColorScheme) {
-        this.type = type
-        this.colorScheme = colorScheme
-    }
-
-    abstract draw(p: p5): void;
+// A representation of a shape that is being drawn by p5 in a layer 
+//      to be used to pass around shape information between layers
+export interface Shape{
+    func : Function
+    parameters : number[]
 }
-
