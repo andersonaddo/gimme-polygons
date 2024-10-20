@@ -1,12 +1,12 @@
-import './App.css';
-import { useEffect, useRef } from 'react';
 import p5 from 'p5';
+import { useEffect, useRef } from 'react';
 import { generateImageDefinition } from './p5_image_generation/imageGen';
+import './App.css';
 
 function sketch(p: p5) {
     //Once at setup
     p.setup = function () {
-        const image = generateImageDefinition(1000, 300)
+        const image = generateImageDefinition(p, 1000, 300)
         p.createCanvas(image.width, image.height)
         p.background(0);
         for (const layer of image.layers) {
@@ -15,9 +15,7 @@ function sketch(p: p5) {
     }
 
     //Every frame
-    p.draw = function () {
-
-    }
+    p.draw = function () { }
 }
 
 function P5DesignCanvas() {
