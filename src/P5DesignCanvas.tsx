@@ -1,7 +1,7 @@
 import './App.css';
 import { useEffect, useRef } from 'react';
 import p5 from 'p5';
-import { generateImageDefinition } from './p5_image_generation/grids';
+import { generateImageDefinition } from './p5_image_generation/imageGen';
 
 function sketch(p: p5) {
     //Once at setup
