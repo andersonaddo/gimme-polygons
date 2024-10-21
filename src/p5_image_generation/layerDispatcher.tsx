@@ -45,9 +45,6 @@ export class LayerDispatcher {
     return layersToAdd.map((x) => x.layer);
   }
 
-  // TODO: Improvements for this:
-  // This should pass in selectors for:
-  // number of sides
   private getRandomLayer(): Layer {
     const config = this.configGenerator()
     return new RegularPolygonLayer(
