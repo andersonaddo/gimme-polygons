@@ -1,7 +1,6 @@
 import { Layer } from "./layers";
 import { RegularPolygonLayer } from "./layerTypes/regularPolygonLayer";
 import { BooleanSelector } from "./selectors/booleanValueSelectors";
-import { CellSizeSelector } from "./selectors/cellSizeSelectors";
 import { ColorSelector } from "./selectors/colorSelectors";
 
 type FutureLayer = {
@@ -10,17 +9,18 @@ type FutureLayer = {
 };
 
 type LayerDispatcherConfig = {
-  cellColorSelectorGenerator: () => ColorSelector
-  cellProbabilitySelectorGenerator: () => BooleanSelector // Only needed if a layer is cell/grid based
-  cellSizeSelector: CellSizeSelector // Only needed if a layer is cell/grid based
+  cellColorSelector: ColorSelector
+  cellProbabilitySelector: BooleanSelector // Only needed if a layer is cell/grid based
+  cellSize: number // Only needed if a layer is cell/grid based
+  regularPolygonSides: number //For RegularPolygonLayer
 }
 
 export class LayerDispatcher {
   futureLayers: FutureLayer[] = [];
-  config: LayerDispatcherConfig
+  configGenerator: () => LayerDispatcherConfig
 
-  constructor(config: LayerDispatcherConfig) {
-    this.config = config
+  constructor(configGenerator: () => LayerDispatcherConfig) {
+    this.configGenerator = configGenerator
   }
 
   // Called by layers themselves to request that certain layers get rendered in the future
@@ -49,11 +49,13 @@ export class LayerDispatcher {
   // This should pass in selectors for:
   // number of sides
   private getRandomLayer(): Layer {
+    const config = this.configGenerator()
     return new RegularPolygonLayer(
       this,
-      this.config.cellColorSelectorGenerator(),
-      this.config.cellProbabilitySelectorGenerator(),
-      this.config.cellSizeSelector()
+      config.cellColorSelector,
+      config.cellProbabilitySelector,
+      config.cellSize,
+      config.regularPolygonSides
     );
   }
 

@@ -1,7 +1,7 @@
 import p5 from "p5";
 import { LayerDispatcher } from "./layerDispatcher";
-import { perlinSelector } from "./selectors/booleanValueSelectors";
-import { COLOR_SCHEMES, randomColorSelector } from "./selectors/colorSelectors";
+import { everyOtherSelector, perlinSelector } from "./selectors/booleanValueSelectors";
+import { accentColorSelector, DEBUG_COLOR_SCHEME, baseColorSelector } from "./selectors/colorSelectors";
 import { Image } from "./types";
 
 export const generateImageDefinition = (
@@ -9,21 +9,27 @@ export const generateImageDefinition = (
   width: number,
   height: number,
 ): Image => {
-  const numOfLayers = 5;
-  const colorScheme = COLOR_SCHEMES[Math.floor(Math.random() * COLOR_SCHEMES.length)]
+  const numOfLayers = 4;
+  const colorScheme = DEBUG_COLOR_SCHEME
 
-  const layerCellSizeSelector = () => width / 20;
-  const layerCellProbabilitySelectorGenerator = () => perlinSelector(p, 0.2)
-  const layerCellColorSelectorGenerator = () => randomColorSelector(p, colorScheme)
+  const shouldUsePerlin = everyOtherSelector(2)
+  const configGenerator = () => {
+    const usingPerlin = shouldUsePerlin()
+    const cellProbSelector = usingPerlin ? perlinSelector(p, 0.2) : everyOtherSelector(2)
+    const layerCellColorSelector = usingPerlin ? baseColorSelector(p, colorScheme) : accentColorSelector(p, colorScheme)
+    const cellSize = width / 20;
+    const regularPolygonSides = usingPerlin ? 80 : 4
 
-  const layerDispatcher = new LayerDispatcher(
-    {
-      cellColorSelectorGenerator: layerCellColorSelectorGenerator,
-      cellProbabilitySelectorGenerator: layerCellProbabilitySelectorGenerator,
-      cellSizeSelector: layerCellSizeSelector
+    return {
+      cellColorSelector: layerCellColorSelector,
+      cellProbabilitySelector: cellProbSelector,
+      cellSize,
+      regularPolygonSides
     }
-  );
+  }
 
+
+  const layerDispatcher = new LayerDispatcher(configGenerator);
   const layers = layerDispatcher.generateLayers(numOfLayers);
 
   return {

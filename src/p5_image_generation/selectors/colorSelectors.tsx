@@ -1,6 +1,11 @@
 import p5 from "p5";
 import { ColorScheme } from "../types";
 
+export const DEBUG_COLOR_SCHEME: ColorScheme = {
+  name: "DEBUG",
+  colors: ["lightgrey", "grey", "white", "red", "yellow"]
+}
+
 export const COLOR_SCHEMES: ColorScheme[] = [
   {
     name: "Ocean",
@@ -30,5 +35,17 @@ export type ColorSelector = () => string
 export const randomColorSelector = (p: p5, colorScheme: ColorScheme): ColorSelector => {
   return () => colorScheme.colors[
     Math.floor(p.random(colorScheme.colors.length))
+  ]
+}
+
+export const baseColorSelector = (p: p5, colorScheme: ColorScheme): ColorSelector => {
+  return () => colorScheme.colors[
+    Math.floor(p.random(3))
+  ]
+}
+
+export const accentColorSelector = (p: p5, colorScheme: ColorScheme): ColorSelector => {
+  return () => colorScheme.colors[
+    Math.floor(p.random(3, 5))
   ]
 }
