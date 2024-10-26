@@ -13,7 +13,6 @@ import { Shape } from "../shape";
 // TODO: parallelogram layer or figure out skew on a shape basis
 export class RegularPolygonLayer extends Layer {
   colorSelector: ColorSelector
-  shouldMakeChildSelector: BooleanSelector
   shapeOperationSelector: ShapeOperationSelector
   cellProbabilitySelector: BooleanSelector
   cellSize: number
@@ -23,7 +22,6 @@ export class RegularPolygonLayer extends Layer {
   constructor(
     dispatcher: LayerDispatcher,
     colorSelector: ColorSelector,
-    shouldMakeChildSelector: BooleanSelector,
     shapeOperationSelector: ShapeOperationSelector,
     cellProbabilitySelector: BooleanSelector,
     cellSize: number,
@@ -31,7 +29,6 @@ export class RegularPolygonLayer extends Layer {
   ) {
     super(LayerType.RegularPolygon, dispatcher);
     this.colorSelector = colorSelector
-    this.shouldMakeChildSelector = shouldMakeChildSelector
     this.shapeOperationSelector = shapeOperationSelector
     this.cellProbabilitySelector = cellProbabilitySelector
     this.cellSize = cellSize
@@ -39,21 +36,14 @@ export class RegularPolygonLayer extends Layer {
     this.shapes = []
   }
 
-  makeFutureLayer() {
-    const operation = this.shapeOperationSelector()
-    const copiedShapes = []
-
-    for (const shape of this.shapes) {
-      const copiedShape = shape.copy()
-      shape.operation = operation
-      copiedShapes.push(copiedShape)
-    }
-
-    //TODO: move the colorSelector so that its passed by the layer dispatcher
-    //TODO: have a way to make the turnsToWait param configurable
-    const shapeLayer = new ShapeLayer(this.layerDispatcher, copiedShapes, this.colorSelector)
-    this.layerDispatcher.declareFutureLayer(shapeLayer, 3)
-  }
+  // makeFutureLayer(shape: Shape) {
+  //   const copiedShape = shape.copy()
+  //   shape.operation = this.shapeOperationSelector()
+  //   //TODO: move the colorSelector so that its passed by the layer dispatcher
+  //   //TODO: have a way to make the turnsToWait param configurable
+  //   const shapeLayer = new ShapeLayer(this.layerDispatcher, copiedShape, this.colorSelector)
+  //   this.layerDispatcher.declareFutureLayer(shapeLayer, 3)
+  // }
 
   draw(p: p5): void {
     const width = p.width;
@@ -64,19 +54,18 @@ export class RegularPolygonLayer extends Layer {
         if (this.cellProbabilitySelector()) {
           const centerX = x + this.cellSize / 2;
           const centerY = y + this.cellSize / 2;
-          const angularOffset = (Math.PI / this.sides) * 2; // best as 2 or 1
-          const radius = p.random(10, this.cellSize / 2);
 
           let vertices: p5.Vector[] = []
 
-          for (let i = 0; i < this.sides; i++) {
-            let x = centerX +
-              radius * Math.cos(angularOffset + (i * 2 * Math.PI) / this.sides)
-            let y = centerY +
-              radius * Math.sin(angularOffset + (i * 2 * Math.PI) / this.sides)
-            p.vertex(x, y);
-            vertices.push(new p5.Vector(x, y))
-          }
+          // so there are multiple kinds of parallelogram grids
+          // 1. Alternating skewed parallelograms, like wings
+          // 2. One direction parallelograms, with custom width and height
+          //      cell width and height? skew amount
+          // LTRB
+          vertices.push(new p5.Vector(x, y))
+          vertices.push(new p5.Vector(x, y + this.cellSize * 0.7,))
+          vertices.push(new p5.Vector(x + this.cellSize, y + this.cellSize * 0.7,))
+          vertices.push(new p5.Vector(x + this.cellSize, y + this.cellSize))
 
           let shape: Shape = new Shape(
             new p5.Vector(centerX, centerY),
@@ -86,12 +75,10 @@ export class RegularPolygonLayer extends Layer {
 
           shape.draw(p)
           this.shapes.push(shape)
+
+          //TODO: make use of makeFutureLayer
         }
       }
-    }
-
-    if (this.shouldMakeChildSelector()) {
-      this.makeFutureLayer()
     }
   }
 }

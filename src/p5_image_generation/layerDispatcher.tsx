@@ -2,17 +2,20 @@ import { Layer } from "./layers";
 import { RegularPolygonLayer } from "./layerTypes/regularPolygonLayer";
 import { BooleanSelector } from "./selectors/booleanValueSelectors";
 import { ColorSelector } from "./selectors/colorSelectors";
+import { ShapeOperationSelector } from "./selectors/shapeOperationSelector";
 
 type FutureLayer = {
   layer: Layer;
   turnsToWait: number;
 };
 
-type LayerDispatcherConfig = {
+export type LayerDispatcherConfig = {
   cellColorSelector: ColorSelector
   cellProbabilitySelector: BooleanSelector // Only needed if a layer is cell/grid based
   cellSize: number // Only needed if a layer is cell/grid based
   regularPolygonSides: number //For RegularPolygonLayer
+  shapeOperationSelector: ShapeOperationSelector
+  shouldMakeChildSelector: BooleanSelector
 }
 
 export class LayerDispatcher {
@@ -50,6 +53,8 @@ export class LayerDispatcher {
     return new RegularPolygonLayer(
       this,
       config.cellColorSelector,
+      config.shouldMakeChildSelector,
+      config.shapeOperationSelector,
       config.cellProbabilitySelector,
       config.cellSize,
       config.regularPolygonSides

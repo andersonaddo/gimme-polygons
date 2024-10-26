@@ -1,6 +1,5 @@
 import { type Layer } from "./layers"
 
-
 export interface Image {
     height: number
     width: number
@@ -12,11 +11,4 @@ export interface Image {
 export interface ColorScheme {
     name: string
     colors: string[]
-}
-
-// A representation of a shape that is being drawn by p5 in a layer 
-//      to be used to pass around shape information between layers
-export interface Shape{
-    func : Function
-    parameters : number[]
 }

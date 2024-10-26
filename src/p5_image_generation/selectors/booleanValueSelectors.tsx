@@ -1,6 +1,6 @@
 import p5 from "p5";
 
-export type BooleanSelector = () => boolean;
+export type BooleanSelector = (x?: number, y?: number) => boolean;
 
 /** 
  * returns a function that randomly returns true half the time
@@ -36,7 +36,5 @@ function perlinSelector(p: p5, smoothingFactor: number): BooleanSelector {
 
 // TODO: returns a function that returns batches of true randomly
 
-// TODO: selector that combines other selectors?
-//       union, intersection, swap between two, apply one if the other is true
 
 export { evenSelector, everyOtherSelector, perlinSelector };
