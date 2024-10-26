@@ -10,6 +10,8 @@ import {
 } from "./selectors/colorSelectors";
 import { ShapeOperationSelectors } from "./selectors/shapeOperationSelector";
 import { LayerTypeSelectors } from "./selectors/shapeTypeSelector";
+import { NumericValueSelectors } from "./selectors/numericValueSelectors";
+import { ShapeOperation } from "./shape";
 
 export type ImageGenerationPreset = (
   p: p5,
@@ -41,6 +43,7 @@ const debugPreset1: ImageGenerationPreset = (
     const cellSize = width / 20;
     const regularPolygonSides = usingPerlin ? 80 : 4;
     const layerTypeSelector = LayerTypeSelectors.polygonOrParallelogramTypeSelector(1)
+    const childTurnsToWaitSelector = NumericValueSelectors.constantNumberSelector(2)
 
     return {
       cellColorSelector: layerCellColorSelector,
@@ -49,7 +52,8 @@ const debugPreset1: ImageGenerationPreset = (
       regularPolygonSides,
       shapeOperationSelector: layerOperationSelector,
       shouldMakeChildSelector: layerShouldMakeChildSelector,
-      layerTypeSelector: layerTypeSelector
+      layerTypeSelector: layerTypeSelector,
+      childLayerTurnsToWaitSelector: childTurnsToWaitSelector
     };
   };
 
@@ -71,6 +75,7 @@ const debugPreset2: ImageGenerationPreset = (
     const cellSize = width / 20;
     const regularPolygonSides = 5;
     const layerTypeSelector = LayerTypeSelectors.polygonOrParallelogramTypeSelector(1)
+    const childTurnsToWaitSelector = NumericValueSelectors.constantNumberSelector(2)
 
     return {
       cellColorSelector: layerCellColorSelector,
@@ -79,14 +84,15 @@ const debugPreset2: ImageGenerationPreset = (
       regularPolygonSides,
       shapeOperationSelector: layerOperationSelector,
       shouldMakeChildSelector: layerShouldMakeChildSelector,
-      layerTypeSelector: layerTypeSelector
+      layerTypeSelector: layerTypeSelector,
+      childLayerTurnsToWaitSelector: childTurnsToWaitSelector
     };
   };
 
   return { layerDispatcherConfigGenerator: configGenerator, numLayers: 4 };
 };
 
-const debugPreset3: ImageGenerationPreset = (
+const exampleParallelogramSelector: ImageGenerationPreset = (
   p: p5,
   width: number,
   height: number
@@ -100,6 +106,7 @@ const debugPreset3: ImageGenerationPreset = (
     const cellSize = width / 20;
     const regularPolygonSides = 5;
     const layerTypeSelector = LayerTypeSelectors.polygonOrParallelogramTypeSelector(0)
+    const childTurnsToWaitSelector = NumericValueSelectors.constantNumberSelector(2)
 
     return {
       cellColorSelector: layerCellColorSelector,
@@ -108,15 +115,51 @@ const debugPreset3: ImageGenerationPreset = (
       regularPolygonSides,
       shapeOperationSelector: layerOperationSelector,
       shouldMakeChildSelector: layerShouldMakeChildSelector,
-      layerTypeSelector: layerTypeSelector
+      layerTypeSelector: layerTypeSelector,
+      childLayerTurnsToWaitSelector: childTurnsToWaitSelector
     };
   };
 
   return { layerDispatcherConfigGenerator: configGenerator, numLayers: 4 };
 };
 
+
+const childLayersExample: ImageGenerationPreset = (
+  p: p5,
+  width: number,
+  height: number
+) => {
+  const configGenerator: () => LayerDispatcherConfig = () => {
+    const colorScheme = COLOR_SCHEMES[1];
+    const cellSize = width / 20;
+    const regularPolygonSides = 5;
+
+    const cellProbSelector = BooleanSelectors.randomSelector(0.6);
+    const layerCellColorSelector = ColorSelectors.randomColorSelector(p, colorScheme)
+    const layerOperationSelector = ShapeOperationSelectors.randomOperationSelector();
+    const layerShouldMakeChildSelector = BooleanSelectors.always()
+    const layerTypeSelector = LayerTypeSelectors.polygonOrParallelogramTypeSelector(1)
+    const childTurnsToWaitSelector = NumericValueSelectors.constantNumberSelector(0)
+
+    return {
+      cellColorSelector: layerCellColorSelector,
+      cellProbabilitySelector: cellProbSelector,
+      cellSize,
+      regularPolygonSides,
+      shapeOperationSelector: layerOperationSelector,
+      shouldMakeChildSelector: layerShouldMakeChildSelector,
+      layerTypeSelector: layerTypeSelector,
+      childLayerTurnsToWaitSelector: childTurnsToWaitSelector
+    };
+  };
+
+  return { layerDispatcherConfigGenerator: configGenerator, numLayers: 2 };
+};
+
+
 export const ALL_IMAGE_PRESETS: Record<string, ImageGenerationPreset> = {
   debugPreset1,
   debugPreset2,
-  debugPreset3,
+  exampleParallelogramSelector,
+  childLayersExample
 };

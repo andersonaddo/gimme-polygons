@@ -39,13 +39,16 @@ export class Shape {
     let vertices = [...this.vertices];
 
     if (this.operation === ShapeOperation.TRUNCATE) {
-      vertices = vertices.slice(Math.floor(vertices.length / 2));
+      vertices = vertices.slice(Math.floor(vertices.length / 2) - 1);
+      return vertices
     } else if (this.operation === ShapeOperation.SHRINK) {
       const newVertices = [];
       for (const vertex of vertices) {
-        newVertices.push(this.centerPoint.lerp(vertex, 0.5));
+        newVertices.push(vertex.lerp(this.centerPoint, 0.7));
       }
+      return newVertices
     }
+
     return vertices;
   }
 

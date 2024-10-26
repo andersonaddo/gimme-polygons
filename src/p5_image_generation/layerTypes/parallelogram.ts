@@ -15,6 +15,7 @@ export class ParallelogramLayer extends Layer {
   skewAmount: number;
 
   constructor(
+    p: p5,
     dispatcher: LayerDispatcher,
     colorSelector: ColorSelector,
     shapeOperationSelector: ShapeOperationSelector,
@@ -28,9 +29,11 @@ export class ParallelogramLayer extends Layer {
     this.cellSize = cellSize;
     this.shapes = [];
     this.skewAmount = 0.3;
+
+    this.defineShapesToDraw(p)
   }
 
-  draw(p: p5): void {
+  defineShapesToDraw(p: p5): void {
     const width = p.width;
     const height = p.height;
     let dir: boolean = true;
@@ -77,10 +80,15 @@ export class ParallelogramLayer extends Layer {
             vertices,
             this.colorSelector()
           );
-          shape.draw(p);
           this.shapes.push(shape);
         }
       }
+    }
+  }
+
+  draw(p: p5): void {
+    for (const shape of this.shapes) {
+      shape.draw(p);
     }
   }
 }

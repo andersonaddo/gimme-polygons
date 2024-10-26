@@ -4,9 +4,8 @@ export type ShapeOperationSelector = () => ShapeOperation
 
 const randomOperationSelector = (): ShapeOperationSelector => {
     return () => {
-        const values = Object.keys(ShapeOperation).map(parseInt);
-        const enumKey = values[Math.floor(Math.random() * values.length)]
-        return enumKey
+        const enumLength = Object.values(ShapeOperation).length / 2
+        return Math.floor(Math.random() * enumLength)
     }
 }
 

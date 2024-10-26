@@ -6,21 +6,25 @@ import { ColorSelector } from "../selectors/colorSelectors";
 import { ShapeOperationSelector } from "../selectors/shapeOperationSelector";
 import { ShapeLayer } from "./shapeLayer";
 import { Shape } from "../shape";
+import { NumericValueSelector } from "../selectors/numericValueSelectors";
 
 export class RegularPolygonLayer extends Layer {
   colorSelector: ColorSelector;
   shouldMakeChildSelector: BooleanSelector;
   shapeOperationSelector: ShapeOperationSelector;
+  childTurnsToWaitSelector: NumericValueSelector;
   cellProbabilitySelector: BooleanSelector;
   cellSize: number;
   sides: number;
   shapes: Shape[];
 
   constructor(
+    p: p5,
     dispatcher: LayerDispatcher,
     colorSelector: ColorSelector,
     shouldMakeChildSelector: BooleanSelector,
     shapeOperationSelector: ShapeOperationSelector,
+    childTurnsToWaitSelector: NumericValueSelector,
     cellProbabilitySelector: BooleanSelector,
     cellSize: number,
     sides: number
@@ -30,9 +34,12 @@ export class RegularPolygonLayer extends Layer {
     this.shouldMakeChildSelector = shouldMakeChildSelector;
     this.shapeOperationSelector = shapeOperationSelector;
     this.cellProbabilitySelector = cellProbabilitySelector;
+    this.childTurnsToWaitSelector = childTurnsToWaitSelector
     this.cellSize = cellSize;
     this.sides = sides;
     this.shapes = [];
+
+    this.defineShapeToDraw(p)
   }
 
   makeFutureLayer() {
@@ -41,21 +48,20 @@ export class RegularPolygonLayer extends Layer {
 
     for (const shape of this.shapes) {
       const copiedShape = shape.copy();
-      shape.operation = operation;
+      copiedShape.operation = operation;
       copiedShapes.push(copiedShape);
     }
 
     //TODO: move the colorSelector so that its passed by the layer dispatcher
-    //TODO: have a way to make the turnsToWait param configurable
     const shapeLayer = new ShapeLayer(
       this.layerDispatcher,
       copiedShapes,
       this.colorSelector
     );
-    this.layerDispatcher.declareFutureLayer(shapeLayer, 3);
+    this.layerDispatcher.declareFutureLayer(shapeLayer, this.childTurnsToWaitSelector());
   }
 
-  draw(p: p5): void {
+  defineShapeToDraw(p: p5) {
     const width = p.width;
     const height = p.height;
 
@@ -86,7 +92,6 @@ export class RegularPolygonLayer extends Layer {
             this.colorSelector()
           );
 
-          shape.draw(p);
           this.shapes.push(shape);
         }
       }
@@ -95,5 +100,11 @@ export class RegularPolygonLayer extends Layer {
     if (this.shouldMakeChildSelector()) {
       this.makeFutureLayer();
     }
+  }
+
+  draw(p: p5) {
+    this.shapes.forEach(shape => {
+      shape.draw(p)
+    })
   }
 }

@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import './App.css';
 import P5DesignCanvas from './P5DesignCanvas';
 import { ImageGenerationPreset } from './p5_image_generation/imageGenPresets';
@@ -6,7 +6,7 @@ import { ALL_IMAGE_PRESETS } from './p5_image_generation/imageGenPresets';
 
 const NUMBER_OF_IMAGES = 5
 
-function Images(props: { preset: ImageGenerationPreset }) {
+function ImagesImpl(props: { preset: ImageGenerationPreset }) {
   const indexes = Array.from(Array(NUMBER_OF_IMAGES).keys())
   return (
     <div style={{ display: "flex", flexWrap: "wrap", flexDirection: "row", "gap": 10, padding: 8 }}>
@@ -19,6 +19,8 @@ function Images(props: { preset: ImageGenerationPreset }) {
     </div>
   );
 }
+
+const Images = memo(ImagesImpl)
 
 
 function App() {
@@ -49,4 +51,4 @@ function App() {
   );
 }
 
-export default App;
+export default memo(App);

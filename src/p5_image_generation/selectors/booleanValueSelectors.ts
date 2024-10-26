@@ -3,6 +3,20 @@ import p5 from "p5";
 export type BooleanSelector = (x?: number, y?: number) => boolean;
 
 /**
+ * returns a function that returns false all the time
+ */
+function never(): BooleanSelector {
+  return () => false
+}
+
+/**
+ * returns a function that returns true all the time
+ */
+function always(): BooleanSelector {
+  return () => true
+}
+
+/**
  * returns a function that randomly returns true half the time
  */
 function evenSelector(): BooleanSelector {
@@ -42,4 +56,4 @@ function perlinSelector(p: p5, smoothingFactor: number): BooleanSelector {
 
 // TODO: returns a function that returns batches of true randomly
 
-export const BooleanSelectors = { evenSelector, everyOtherSelector, perlinSelector, randomSelector };
+export const BooleanSelectors = { evenSelector, everyOtherSelector, perlinSelector, randomSelector, always, never };

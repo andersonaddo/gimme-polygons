@@ -5,17 +5,15 @@ import { ImageGenerationPreset } from "./imageGenPresets";
 
 export const generateImageDefinition = (
   p: p5,
-  width: number,
-  height: number,
   preset: ImageGenerationPreset
 ): Image => {
-  const params = preset(p, width, height)
+  const params = preset(p, p.width, p.height)
   const layerDispatcher = new LayerDispatcher(params.layerDispatcherConfigGenerator);
-  const layers = layerDispatcher.generateLayers(params.numLayers);
+  const layers = layerDispatcher.generateLayers(params.numLayers, p);
 
   return {
-    height,
-    width,
+    height: p.height,
+    width: p.width,
     layers,
   };
 };
