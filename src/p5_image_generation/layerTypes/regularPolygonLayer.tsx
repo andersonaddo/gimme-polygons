@@ -7,8 +7,6 @@ import { ShapeOperationSelector } from "../selectors/shapeOperationSelector";
 import { ShapeLayer } from "./shapeLayer";
 import { Shape } from "../shape";
 
-// TODO: start using declareFutureLayer for more fun designs
-// TODO: parallelogram layer or figure out skew on a shape basis
 export class RegularPolygonLayer extends Layer {
   colorSelector: ColorSelector;
   shouldMakeChildSelector: BooleanSelector;

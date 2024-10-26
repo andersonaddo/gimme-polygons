@@ -13,7 +13,7 @@ export class ShapeLayer extends Layer {
     shapes: Shape[],
     colorSelector: ColorSelector,
   ) {
-    super(LayerType.RegularPolygon, dispatcher);
+    super(LayerType.Shape, dispatcher);
     this.shapes = shapes
     this.colorSelector = colorSelector
   }

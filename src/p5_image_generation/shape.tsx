@@ -58,7 +58,7 @@ export class Shape {
 
     if (this.operation === ShapeOperation.HOLLOW) {
       p.stroke(this.color);
-      p.strokeWeight(5);
+      p.strokeWeight(10);
       p.noFill();
     } else {
       p.fill(this.color);

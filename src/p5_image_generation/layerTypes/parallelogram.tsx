@@ -21,7 +21,7 @@ export class ParallelogramLayer extends Layer {
     cellProbabilitySelector: BooleanSelector,
     cellSize: number
   ) {
-    super(LayerType.RegularPolygon, dispatcher);
+    super(LayerType.Parallelogram, dispatcher);
     this.colorSelector = colorSelector;
     this.shapeOperationSelector = shapeOperationSelector;
     this.cellProbabilitySelector = cellProbabilitySelector;
@@ -70,14 +70,13 @@ export class ParallelogramLayer extends Layer {
             );
             vertices.push(new p5.Vector(x, y));
           }
-          dir = !dir;
 
+          dir = !dir;
           let shape: Shape = new Shape(
             new p5.Vector(centerX, centerY),
             vertices,
             this.colorSelector()
           );
-
           shape.draw(p);
           this.shapes.push(shape);
         }

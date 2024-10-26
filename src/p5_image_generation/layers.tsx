@@ -3,6 +3,8 @@ import { LayerDispatcher } from "./layerDispatcher";
 
 export enum LayerType {
   RegularPolygon,
+  Shape,
+  Parallelogram
 }
 
 export abstract class Layer {
