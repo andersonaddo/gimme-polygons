@@ -1,9 +1,10 @@
-import { Layer } from "./layers";
+import { Layer, LayerType } from "./layers";
 import { ParallelogramLayer } from "./layerTypes/parallelogram";
 import { RegularPolygonLayer } from "./layerTypes/regularPolygonLayer";
 import { BooleanSelector } from "./selectors/booleanValueSelectors";
 import { ColorSelector } from "./selectors/colorSelectors";
 import { ShapeOperationSelector } from "./selectors/shapeOperationSelector";
+import { LayerTypeSelector } from "./selectors/shapeTypeSelector";
 
 type FutureLayer = {
   layer: Layer;
@@ -11,6 +12,7 @@ type FutureLayer = {
 };
 
 export type LayerDispatcherConfig = {
+  layerTypeSelector: LayerTypeSelector;
   cellColorSelector: ColorSelector;
   cellProbabilitySelector: BooleanSelector; // Only needed if a layer is cell/grid based
   cellSize: number; // Only needed if a layer is cell/grid based
@@ -51,18 +53,35 @@ export class LayerDispatcher {
 
   private getRandomLayer(): Layer {
     const config = this.configGenerator();
-    // TODO: better support both Parallelogram and RegularPolygonLayer
-    //      named parameters maybe?
-    // return new RegularPolygonLayer(
-    return new ParallelogramLayer(
-      this,
-      config.cellColorSelector,
-      // config.shouldMakeChildSelector,
-      config.shapeOperationSelector,
-      config.cellProbabilitySelector,
-      config.cellSize
-      // config.regularPolygonSides
-    );
+
+    const type = config.layerTypeSelector()
+
+    switch (type) {
+      case LayerType.Parallelogram: {
+        return new ParallelogramLayer(
+          this,
+          config.cellColorSelector,
+          config.shapeOperationSelector,
+          config.cellProbabilitySelector,
+          config.cellSize
+        );
+      }
+      case LayerType.RegularPolygon: {
+        return new RegularPolygonLayer(
+          this,
+          config.cellColorSelector,
+          config.shouldMakeChildSelector,
+          config.shapeOperationSelector,
+          config.cellProbabilitySelector,
+          config.cellSize,
+          config.regularPolygonSides
+        );
+      }
+      default: {
+        throw Error(`Layer dispatcher can't render ${type} layers directly`)
+      }
+    }
+
   }
 
   public generateLayers(numLayers: number): Layer[] {

@@ -42,4 +42,4 @@ function perlinSelector(p: p5, smoothingFactor: number): BooleanSelector {
 
 // TODO: returns a function that returns batches of true randomly
 
-export { evenSelector, everyOtherSelector, perlinSelector, randomSelector };
+export const BooleanSelectors = { evenSelector, everyOtherSelector, perlinSelector, randomSelector };

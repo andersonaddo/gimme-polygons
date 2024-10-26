@@ -32,20 +32,22 @@ export const COLOR_SCHEMES: ColorScheme[] = [
 
 export type ColorSelector = () => string
 
-export const randomColorSelector = (p: p5, colorScheme: ColorScheme): ColorSelector => {
+const randomColorSelector = (p: p5, colorScheme: ColorScheme): ColorSelector => {
   return () => colorScheme.colors[
     Math.floor(p.random(colorScheme.colors.length))
   ]
 }
 
-export const baseColorSelector = (p: p5, colorScheme: ColorScheme): ColorSelector => {
+const baseColorSelector = (p: p5, colorScheme: ColorScheme): ColorSelector => {
   return () => colorScheme.colors[
     Math.floor(p.random(3))
   ]
 }
 
-export const accentColorSelector = (p: p5, colorScheme: ColorScheme): ColorSelector => {
+const accentColorSelector = (p: p5, colorScheme: ColorScheme): ColorSelector => {
   return () => colorScheme.colors[
     Math.floor(p.random(3, 5))
   ]
 }
+
+export const ColorSelectors = { randomColorSelector, baseColorSelector, accentColorSelector }
