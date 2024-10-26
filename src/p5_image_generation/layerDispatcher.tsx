@@ -1,4 +1,5 @@
 import { Layer } from "./layers";
+import { ParallelogramLayer } from "./layerTypes/parallelogram";
 import { RegularPolygonLayer } from "./layerTypes/regularPolygonLayer";
 import { BooleanSelector } from "./selectors/booleanValueSelectors";
 import { ColorSelector } from "./selectors/colorSelectors";
@@ -10,20 +11,20 @@ type FutureLayer = {
 };
 
 export type LayerDispatcherConfig = {
-  cellColorSelector: ColorSelector
-  cellProbabilitySelector: BooleanSelector // Only needed if a layer is cell/grid based
-  cellSize: number // Only needed if a layer is cell/grid based
-  regularPolygonSides: number //For RegularPolygonLayer
-  shapeOperationSelector: ShapeOperationSelector
-  shouldMakeChildSelector: BooleanSelector
-}
+  cellColorSelector: ColorSelector;
+  cellProbabilitySelector: BooleanSelector; // Only needed if a layer is cell/grid based
+  cellSize: number; // Only needed if a layer is cell/grid based
+  regularPolygonSides: number; //For RegularPolygonLayer
+  shapeOperationSelector: ShapeOperationSelector;
+  shouldMakeChildSelector: BooleanSelector;
+};
 
 export class LayerDispatcher {
   futureLayers: FutureLayer[] = [];
-  configGenerator: () => LayerDispatcherConfig
+  configGenerator: () => LayerDispatcherConfig;
 
   constructor(configGenerator: () => LayerDispatcherConfig) {
-    this.configGenerator = configGenerator
+    this.configGenerator = configGenerator;
   }
 
   // Called by layers themselves to request that certain layers get rendered in the future
@@ -49,15 +50,18 @@ export class LayerDispatcher {
   }
 
   private getRandomLayer(): Layer {
-    const config = this.configGenerator()
-    return new RegularPolygonLayer(
+    const config = this.configGenerator();
+    // TODO: better support both Parallelogram and RegularPolygonLayer
+    //      named parameters maybe?
+    // return new RegularPolygonLayer(
+    return new ParallelogramLayer(
       this,
       config.cellColorSelector,
-      config.shouldMakeChildSelector,
+      // config.shouldMakeChildSelector,
       config.shapeOperationSelector,
       config.cellProbabilitySelector,
-      config.cellSize,
-      config.regularPolygonSides
+      config.cellSize
+      // config.regularPolygonSides
     );
   }
 
