@@ -75,7 +75,7 @@ function App() {
   return (
     <div>
       <div style={{ width: "100%", position: "sticky", backgroundColor: "#fffff2", top: 0, paddingTop: 4 }}>
-        <div style={{ display: "flex", flexDirection: "row", gap: 8, padding: 4, alignItems: "center" }}>
+        <div style={{ display: "flex", flexDirection: "row", gap: 8, padding: 4, alignItems: "center", flexWrap: "wrap" }}>
           <Image src={require("./media/logo.png")} height={20} fit='contain' width={"auto"} />
           <Title order={6}>GIMME POLYGONS!</Title>
           <Space />
@@ -83,7 +83,9 @@ function App() {
             Refresh Images
           </Button>
           <Space />
-          <Select onChange={onPresetChange} value={chosenPreset} data={presetOptions} />
+          <div style={{ minWidth: 50 }}>
+            <Select onChange={onPresetChange} value={chosenPreset} data={presetOptions} />
+          </div>
           <ActionIcon variant="transparent" component="a" href="https://github.com/andersonaddo/gimme-polygons" target="_blank" rel="noopener noreferrer">
             <IconBrandGithub color='black' />
           </ActionIcon>
