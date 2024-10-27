@@ -14,6 +14,7 @@ export class RegularPolygonLayer extends Layer {
   shapeOperationSelector: ShapeOperationSelector;
   childTurnsToWaitSelector: NumericValueSelector;
   cellProbabilitySelector: BooleanSelector;
+  shapeRadiusSelector: NumericValueSelector;
   cellSize: number;
   sides: number;
   shapes: Shape[];
@@ -26,6 +27,7 @@ export class RegularPolygonLayer extends Layer {
     shapeOperationSelector: ShapeOperationSelector,
     childTurnsToWaitSelector: NumericValueSelector,
     cellProbabilitySelector: BooleanSelector,
+    shapeRadiusSelector: NumericValueSelector,
     cellSize: number,
     sides: number
   ) {
@@ -34,31 +36,43 @@ export class RegularPolygonLayer extends Layer {
     this.shouldMakeChildSelector = shouldMakeChildSelector;
     this.shapeOperationSelector = shapeOperationSelector;
     this.cellProbabilitySelector = cellProbabilitySelector;
-    this.childTurnsToWaitSelector = childTurnsToWaitSelector
+    this.childTurnsToWaitSelector = childTurnsToWaitSelector;
+    this.shapeRadiusSelector = shapeRadiusSelector;
     this.cellSize = cellSize;
     this.sides = sides;
     this.shapes = [];
-
-    this.defineShapeToDraw(p)
+    this.defineShapeToDraw(p);
   }
 
   makeFutureLayer() {
     const operation = this.shapeOperationSelector();
-    const layerGenerator = deriveShapeLayerGenerator(this.layerDispatcher, this.shapes, operation)
-    this.layerDispatcher.declareFutureLayer(layerGenerator, this.childTurnsToWaitSelector());
+    const layerGenerator = deriveShapeLayerGenerator(
+      this.layerDispatcher,
+      this.shapes,
+      operation
+    );
+    this.layerDispatcher.declareFutureLayer(
+      layerGenerator,
+      this.childTurnsToWaitSelector()
+    );
   }
 
   defineShapeToDraw(p: p5) {
     const width = p.width;
     const height = p.height;
 
-    for (let x = 0; x < width; x += this.cellSize) {
-      for (let y = 0; y < height; y += this.cellSize) {
+    for (let y = 0; y < height; y += this.cellSize) {
+      for (let x = 0; x < width; x += this.cellSize) {
         if (this.cellProbabilitySelector()) {
           const centerX = x + this.cellSize / 2;
           const centerY = y + this.cellSize / 2;
-          const angularOffset = (Math.PI / this.sides) * 2; // best as 2 or 1
-          const radius = p.random(10, this.cellSize / 2);
+
+          // TODO: Should we have an input shape object? So diamond and square are seperate?
+          //      so their shape definition is sides, angular offset and raius/size selector?
+          //      In which case we merge parallelograms back into this
+          //      but it is a shape defenition it has skew defined
+          const angularOffset = (Math.PI / this.sides) * 1; // best as 2 or 1
+          const radius = this.shapeRadiusSelector();
 
           let vertices: p5.Vector[] = [];
 
@@ -90,8 +104,8 @@ export class RegularPolygonLayer extends Layer {
   }
 
   draw(p: p5) {
-    this.shapes.forEach(shape => {
-      shape.draw(p)
-    })
+    this.shapes.forEach((shape) => {
+      shape.draw(p);
+    });
   }
 }

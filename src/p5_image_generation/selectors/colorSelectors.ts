@@ -50,4 +50,18 @@ const accentColorSelector = (p: p5, colorScheme: ColorScheme): ColorSelector => 
   ]
 }
 
-export const ColorSelectors = { randomColorSelector, baseColorSelector, accentColorSelector }
+/**
+ * returns a function that randomly returns a color based on perlin noise
+ * @param smoothingFactor the greater the division the smoother the noise
+ */
+const perlinColorSelector = (p: p5, colorScheme: ColorScheme, smoothingFactor: number): ColorSelector => {
+  let counter = p.random() * 10;
+  return () => {
+    counter += 1 * smoothingFactor;
+    const noiseValue = p.noise(counter);
+    const colorIndex = Math.floor(noiseValue * colorScheme.colors.length);
+    return colorScheme.colors[colorIndex];
+  }
+}
+
+export const ColorSelectors = { randomColorSelector, baseColorSelector, accentColorSelector, perlinColorSelector }

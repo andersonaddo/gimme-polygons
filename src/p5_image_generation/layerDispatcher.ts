@@ -25,6 +25,7 @@ export type LayerDispatcherConfig = {
 
   //For RegularPolygonLayer
   regularPolygonSidesSelector: NumericValueSelector;
+  shapeRadiusSelector: NumericValueSelector;
 
   // For layers that make child ShapeLayers
   shouldMakeChildSelector: BooleanSelector;
@@ -32,9 +33,10 @@ export type LayerDispatcherConfig = {
   childLayerTurnsToWaitSelector: NumericValueSelector;
 };
 
-export type PartialLayerDispatcherConfig = Partial<LayerDispatcherConfig> & Pick<LayerDispatcherConfig, "layerTypeSelector">
+export type PartialLayerDispatcherConfig = Partial<LayerDispatcherConfig> &
+  Pick<LayerDispatcherConfig, "layerTypeSelector">;
 
-export type LayerGeneratingClosure = (config: LayerDispatcherConfig) => Layer
+export type LayerGeneratingClosure = (config: LayerDispatcherConfig) => Layer;
 
 export class LayerDispatcher {
   futureLayers: FutureLayer[] = [];
@@ -42,31 +44,41 @@ export class LayerDispatcher {
 
   constructor(configGenerator: () => PartialLayerDispatcherConfig) {
     this.configGenerator = configGenerator;
-    this.futureLayers = []
+    this.futureLayers = [];
   }
 
-  private assureFunc<T extends ((...args: any[]) => any) | undefined>(func: T): NonNullable<T> {
-    return func ?? DummySelector as NonNullable<T>
+  private assureFunc<T extends ((...args: any[]) => any) | undefined>(
+    func: T
+  ): NonNullable<T> {
+    return func ?? (DummySelector as NonNullable<T>);
   }
 
   private getFullConfig(): LayerDispatcherConfig {
-    const config = this.configGenerator()
+    const config = this.configGenerator();
     return {
       layerTypeSelector: this.assureFunc(config.layerTypeSelector),
       cellColorSelector: this.assureFunc(config.cellColorSelector),
       cellProbabilitySelector: this.assureFunc(config.cellProbabilitySelector),
       cellSizeSelector: this.assureFunc(config.cellSizeSelector),
-      regularPolygonSidesSelector: this.assureFunc(config.regularPolygonSidesSelector),
+      regularPolygonSidesSelector: this.assureFunc(
+        config.regularPolygonSidesSelector
+      ),
+      shapeRadiusSelector: this.assureFunc(config.shapeRadiusSelector),
       shouldMakeChildSelector: this.assureFunc(config.shouldMakeChildSelector),
       shapeOperationSelector: this.assureFunc(config.shapeOperationSelector),
-      childLayerTurnsToWaitSelector: this.assureFunc(config.childLayerTurnsToWaitSelector)
-    }
+      childLayerTurnsToWaitSelector: this.assureFunc(
+        config.childLayerTurnsToWaitSelector
+      ),
+    };
   }
 
   // Called by layers themselves to request that certain layers get rendered in the future
   // Note that, currently, future layers are not guaranteed to ge generated
   // Since they can be cut off by generateLayers's numLayers function
-  public declareFutureLayer(layerGenerator: LayerGeneratingClosure, turnsToWait: number): void {
+  public declareFutureLayer(
+    layerGenerator: LayerGeneratingClosure,
+    turnsToWait: number
+  ): void {
     this.futureLayers.push({
       layerGenerator,
       turnsToWait,
@@ -87,7 +99,7 @@ export class LayerDispatcher {
   }
 
   private getRandomLayer(p: p5): Layer {
-    const config = this.getFullConfig()
+    const config = this.getFullConfig();
     const type = config.layerTypeSelector();
 
     switch (type) {
@@ -100,7 +112,7 @@ export class LayerDispatcher {
           config.shapeOperationSelector,
           config.childLayerTurnsToWaitSelector,
           config.cellProbabilitySelector,
-          config.cellSizeSelector(),
+          config.cellSizeSelector()
         );
       }
       case LayerType.RegularPolygon: {
@@ -112,21 +124,18 @@ export class LayerDispatcher {
           config.shapeOperationSelector,
           config.childLayerTurnsToWaitSelector,
           config.cellProbabilitySelector,
+          config.shapeRadiusSelector,
           config.cellSizeSelector(),
           config.regularPolygonSidesSelector()
         );
       }
       case LayerType.Background: {
-        return new BackgroundLayer(
-          this,
-          config.cellColorSelector
-        )
+        return new BackgroundLayer(this, config.cellColorSelector);
       }
       default: {
-        throw Error(`Layer dispatcher can't render ${type} layers directly`)
+        throw Error(`Layer dispatcher can't render ${type} layers directly`);
       }
     }
-
   }
 
   public generateLayers(numLayers: number, p: p5): Layer[] {

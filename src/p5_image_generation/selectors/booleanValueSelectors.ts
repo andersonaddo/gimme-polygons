@@ -49,11 +49,28 @@ function perlinSelector(p: p5, smoothingFactor: number): BooleanSelector {
   let counter = p.random() * 10;
   return () => {
     counter += 1 * smoothingFactor;
-    const val = p.noise(counter);
-    return val < 0.5;
+    const noiseValue = p.noise(counter);
+    return noiseValue < 0.5;
   };
 }
 
+/**
+ * returns a function that randomly returns true in batches using sine
+ *   and a random cutoff
+ */
+function sineBatchSelector(p: p5): BooleanSelector {
+  let counter =  p.random() * 100;
+
+  const randomCutoff = p.random(0.3,1) // Random cutoff for variability
+
+  return () => {
+    counter++;
+    const sineValue = Math.sin((counter / 100) * Math.PI * 2); // Adjust the divisor for desired effect
+    return sineValue > randomCutoff;
+  };
+}
+
+
 // TODO: returns a function that returns batches of true randomly
 
-export const BooleanSelectors = { evenSelector, everyOtherSelector, perlinSelector, randomSelector, always, never };
+export const BooleanSelectors = { evenSelector, everyOtherSelector, perlinSelector, randomSelector, always, never , sineBatchSelector};

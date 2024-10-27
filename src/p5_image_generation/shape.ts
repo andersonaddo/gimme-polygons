@@ -40,13 +40,13 @@ export class Shape {
 
     if (this.operation === ShapeOperation.TRUNCATE) {
       vertices = vertices.slice(Math.floor(vertices.length / 2) - 1);
-      return vertices
+      return vertices;
     } else if (this.operation === ShapeOperation.SHRINK) {
       const newVertices = [];
       for (const vertex of vertices) {
         newVertices.push(vertex.lerp(this.centerPoint, 0.7));
       }
-      return newVertices
+      return newVertices;
     }
 
     return vertices;
