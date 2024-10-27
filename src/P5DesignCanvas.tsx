@@ -29,7 +29,7 @@ function P5DesignCanvas(props: { preset: ImageGenerationPreset }) {
     useEffect(() => {
         if (p5ContainerRef.current) {
             const p5Instance = new p5(sketch, p5ContainerRef.current);
-            p5Context.setP5SaveFunction?.(() => () => p5Instance.saveCanvas(`POLYGONS ${(new Date()).toISOString()}`))
+            p5Context.setP5SaveFunction?.(() => () => p5Instance.saveCanvas(`GIMME POLYGONS ${(new Date()).toISOString()}`))
             return () => {
                 p5Context.setP5SaveFunction?.(undefined)
                 p5Instance.remove()

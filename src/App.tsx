@@ -10,9 +10,11 @@ const NUMBER_OF_IMAGES = 5
 function P5DownloadButton() {
   const p5Context = useContext(P5Context)
   return (
-    <ActionIcon onClick={p5Context.p5SaveFunction}>
-      <IconDownload />
-    </ActionIcon>
+    <div>
+      <ActionIcon onClick={p5Context.p5SaveFunction}>
+        <IconDownload />
+      </ActionIcon>
+    </div>
   );
 }
 
@@ -75,7 +77,7 @@ function App() {
       <div style={{ width: "100%", position: "sticky", backgroundColor: "#fffff2", top: 0, paddingTop: 4 }}>
         <div style={{ display: "flex", flexDirection: "row", gap: 8, padding: 4, alignItems: "center" }}>
           <Image src={require("./media/logo.png")} height={20} fit='contain' width={"auto"} />
-          <Title order={6}>POLYGONS</Title>
+          <Title order={6}>GIMME POLYGONS!</Title>
           <Space />
           <Button onClick={increaseVersion}>
             Refresh Images
