@@ -1,24 +1,27 @@
 import p5 from "p5";
-import { LayerDispatcherConfig } from "./layerDispatcher";
+import { PartialLayerDispatcherConfig } from "./layerDispatcher";
+import { LayerType } from "./layers";
 import {
   BooleanSelectors,
 } from "./selectors/booleanValueSelectors";
 import {
-  DEBUG_COLOR_SCHEME,
-  ColorSelectors,
   COLOR_SCHEMES,
+  ColorSelectors,
+  DEBUG_COLOR_SCHEME,
 } from "./selectors/colorSelectors";
+import { NumericValueSelectors } from "./selectors/numericValueSelectors";
 import { ShapeOperationSelectors } from "./selectors/shapeOperationSelector";
 import { LayerTypeSelectors } from "./selectors/shapeTypeSelector";
-import { NumericValueSelectors } from "./selectors/numericValueSelectors";
-import { ShapeOperation } from "./shape";
 
+//Note that these do not have to provide full LayerDispatcherConfigs
+//if they're certain that parts of the config won't be used.
+//There will be errors of the missing parts are needed at runtime, though
 export type ImageGenerationPreset = (
   p: p5,
   width: number,
   height: number
 ) => {
-  layerDispatcherConfigGenerator: () => LayerDispatcherConfig;
+  layerDispatcherConfigGenerator: () => PartialLayerDispatcherConfig;
   numLayers: number
 }
 
@@ -29,7 +32,7 @@ const debugPreset1: ImageGenerationPreset = (
 ) => {
   const shouldUsePerlin = BooleanSelectors.everyOtherSelector(2);
 
-  const configGenerator: () => LayerDispatcherConfig = () => {
+  const configGenerator: () => PartialLayerDispatcherConfig = () => {
     const colorScheme = DEBUG_COLOR_SCHEME;
     const usingPerlin = shouldUsePerlin();
     const cellProbSelector = usingPerlin
@@ -40,16 +43,16 @@ const debugPreset1: ImageGenerationPreset = (
       : ColorSelectors.accentColorSelector(p, colorScheme);
     const layerOperationSelector = ShapeOperationSelectors.randomOperationSelector();
     const layerShouldMakeChildSelector = BooleanSelectors.everyOtherSelector(2);
-    const cellSize = width / 20;
-    const regularPolygonSides = usingPerlin ? 80 : 4;
+    const layerCellSizeSelector = NumericValueSelectors.constantNumberSelector(width / 20);
+    const layerRegularPolygonSidesSelector = NumericValueSelectors.constantNumberSelector(usingPerlin ? 80 : 4);
     const layerTypeSelector = LayerTypeSelectors.polygonOrParallelogramTypeSelector(1)
     const childTurnsToWaitSelector = NumericValueSelectors.constantNumberSelector(2)
 
     return {
       cellColorSelector: layerCellColorSelector,
       cellProbabilitySelector: cellProbSelector,
-      cellSize,
-      regularPolygonSides,
+      cellSizeSelector: layerCellSizeSelector,
+      regularPolygonSidesSelector: layerRegularPolygonSidesSelector,
       shapeOperationSelector: layerOperationSelector,
       shouldMakeChildSelector: layerShouldMakeChildSelector,
       layerTypeSelector: layerTypeSelector,
@@ -66,22 +69,22 @@ const debugPreset2: ImageGenerationPreset = (
   width: number,
   height: number
 ) => {
-  const configGenerator: () => LayerDispatcherConfig = () => {
+  const configGenerator: () => PartialLayerDispatcherConfig = () => {
     const colorScheme = DEBUG_COLOR_SCHEME;
     const cellProbSelector = BooleanSelectors.evenSelector();
     const layerCellColorSelector = ColorSelectors.randomColorSelector(p, colorScheme);
     const layerOperationSelector = ShapeOperationSelectors.randomOperationSelector();
     const layerShouldMakeChildSelector = BooleanSelectors.everyOtherSelector(2);
-    const cellSize = width / 20;
-    const regularPolygonSides = 5;
+    const layerCellSizeSelector = NumericValueSelectors.constantNumberSelector(width / 20);
+    const layerRegularPolygonSidesSelector = NumericValueSelectors.constantNumberSelector(5);
     const layerTypeSelector = LayerTypeSelectors.polygonOrParallelogramTypeSelector(1)
     const childTurnsToWaitSelector = NumericValueSelectors.constantNumberSelector(2)
 
     return {
       cellColorSelector: layerCellColorSelector,
       cellProbabilitySelector: cellProbSelector,
-      cellSize,
-      regularPolygonSides,
+      cellSizeSelector: layerCellSizeSelector,
+      regularPolygonSidesSelector: layerRegularPolygonSidesSelector,
       shapeOperationSelector: layerOperationSelector,
       shouldMakeChildSelector: layerShouldMakeChildSelector,
       layerTypeSelector: layerTypeSelector,
@@ -97,26 +100,20 @@ const exampleParallelogramSelector: ImageGenerationPreset = (
   width: number,
   height: number
 ) => {
-  const configGenerator: () => LayerDispatcherConfig = () => {
+  const configGenerator: () => PartialLayerDispatcherConfig = () => {
     const colorScheme = COLOR_SCHEMES[0];
     const cellProbSelector = BooleanSelectors.randomSelector(0.1);
     const layerCellColorSelector = ColorSelectors.randomColorSelector(p, colorScheme);
-    const layerOperationSelector = ShapeOperationSelectors.randomOperationSelector();
-    const layerShouldMakeChildSelector = BooleanSelectors.everyOtherSelector(2);
-    const cellSize = width / 20;
-    const regularPolygonSides = 5;
+    const layerShouldMakeChildSelector = BooleanSelectors.never();
+    const layerCellSizeSelector = NumericValueSelectors.constantNumberSelector(width / 20);
     const layerTypeSelector = LayerTypeSelectors.polygonOrParallelogramTypeSelector(0)
-    const childTurnsToWaitSelector = NumericValueSelectors.constantNumberSelector(2)
 
     return {
       cellColorSelector: layerCellColorSelector,
       cellProbabilitySelector: cellProbSelector,
-      cellSize,
-      regularPolygonSides,
-      shapeOperationSelector: layerOperationSelector,
+      cellSizeSelector: layerCellSizeSelector,
       shouldMakeChildSelector: layerShouldMakeChildSelector,
       layerTypeSelector: layerTypeSelector,
-      childLayerTurnsToWaitSelector: childTurnsToWaitSelector
     };
   };
 
@@ -129,11 +126,21 @@ const childLayersExample: ImageGenerationPreset = (
   width: number,
   height: number
 ) => {
-  const configGenerator: () => LayerDispatcherConfig = () => {
-    const colorScheme = COLOR_SCHEMES[1];
-    const cellSize = width / 20;
-    const regularPolygonSides = 5;
+  let layerCount = -1
 
+  const configGenerator: () => PartialLayerDispatcherConfig = () => {
+    layerCount++
+
+    if (layerCount === 0) {
+      return {
+        cellColorSelector: () => "#221C35",
+        layerTypeSelector: () => LayerType.Background,
+      };
+    }
+
+    const colorScheme = COLOR_SCHEMES[1];
+    const layerCellSizeSelector = NumericValueSelectors.constantNumberSelector(width / 20);
+    const layerRegularPolygonSidesSelector = NumericValueSelectors.constantNumberSelector(5);
     const cellProbSelector = BooleanSelectors.randomSelector(0.6);
     const layerCellColorSelector = ColorSelectors.randomColorSelector(p, colorScheme)
     const layerOperationSelector = ShapeOperationSelectors.randomOperationSelector();
@@ -144,8 +151,8 @@ const childLayersExample: ImageGenerationPreset = (
     return {
       cellColorSelector: layerCellColorSelector,
       cellProbabilitySelector: cellProbSelector,
-      cellSize,
-      regularPolygonSides,
+      cellSizeSelector: layerCellSizeSelector,
+      regularPolygonSidesSelector: layerRegularPolygonSidesSelector,
       shapeOperationSelector: layerOperationSelector,
       shouldMakeChildSelector: layerShouldMakeChildSelector,
       layerTypeSelector: layerTypeSelector,
@@ -153,7 +160,7 @@ const childLayersExample: ImageGenerationPreset = (
     };
   };
 
-  return { layerDispatcherConfigGenerator: configGenerator, numLayers: 2 };
+  return { layerDispatcherConfigGenerator: configGenerator, numLayers: 3 };
 };
 
 

@@ -3,10 +3,10 @@ import { LayerDispatcher } from "../layerDispatcher";
 import { Layer, LayerType } from "../layers";
 import { BooleanSelector } from "../selectors/booleanValueSelectors";
 import { ColorSelector } from "../selectors/colorSelectors";
-import { ShapeOperationSelector } from "../selectors/shapeOperationSelector";
-import { ShapeLayer } from "./shapeLayer";
-import { Shape } from "../shape";
 import { NumericValueSelector } from "../selectors/numericValueSelectors";
+import { ShapeOperationSelector } from "../selectors/shapeOperationSelector";
+import { Shape } from "../shape";
+import { deriveShapeLayerGenerator } from "./util";
 
 export class RegularPolygonLayer extends Layer {
   colorSelector: ColorSelector;
@@ -44,21 +44,8 @@ export class RegularPolygonLayer extends Layer {
 
   makeFutureLayer() {
     const operation = this.shapeOperationSelector();
-    const copiedShapes = [];
-
-    for (const shape of this.shapes) {
-      const copiedShape = shape.copy();
-      copiedShape.operation = operation;
-      copiedShapes.push(copiedShape);
-    }
-
-    //TODO: move the colorSelector so that its passed by the layer dispatcher
-    const shapeLayer = new ShapeLayer(
-      this.layerDispatcher,
-      copiedShapes,
-      this.colorSelector
-    );
-    this.layerDispatcher.declareFutureLayer(shapeLayer, this.childTurnsToWaitSelector());
+    const layerGenerator = deriveShapeLayerGenerator(this.layerDispatcher, this.shapes, operation)
+    this.layerDispatcher.declareFutureLayer(layerGenerator, this.childTurnsToWaitSelector());
   }
 
   defineShapeToDraw(p: p5) {

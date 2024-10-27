@@ -1,7 +1,6 @@
 import p5 from 'p5';
 import { memo, useCallback, useEffect, useRef } from 'react';
 import { generateImageDefinition } from './p5_image_generation/imageGen';
-import './App.css';
 import { ImageGenerationPreset } from './p5_image_generation/imageGenPresets';
 
 const HEIGHT = 300
@@ -14,8 +13,8 @@ function P5DesignCanvas(props: { preset: ImageGenerationPreset }) {
         //Once at setup
         p.setup = function () {
             p.createCanvas(WIDTH, HEIGHT)
-            const image = generateImageDefinition(p, props.preset)
             p.background(0);
+            const image = generateImageDefinition(p, props.preset)
             for (const layer of image.layers) {
                 layer.draw(p)
             }

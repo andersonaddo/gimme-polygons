@@ -5,10 +5,14 @@ import { BooleanSelector } from "../selectors/booleanValueSelectors";
 import { ColorSelector } from "../selectors/colorSelectors";
 import { ShapeOperationSelector } from "../selectors/shapeOperationSelector";
 import { Shape } from "../shape";
+import { deriveShapeLayerGenerator } from "./util";
+import { NumericValueSelector } from "../selectors/numericValueSelectors";
 
 export class ParallelogramLayer extends Layer {
   colorSelector: ColorSelector;
+  shouldMakeChildSelector: BooleanSelector;
   shapeOperationSelector: ShapeOperationSelector;
+  childTurnsToWaitSelector: NumericValueSelector;
   cellProbabilitySelector: BooleanSelector;
   cellSize: number;
   shapes: Shape[];
@@ -18,19 +22,29 @@ export class ParallelogramLayer extends Layer {
     p: p5,
     dispatcher: LayerDispatcher,
     colorSelector: ColorSelector,
+    shouldMakeChildSelector: BooleanSelector,
     shapeOperationSelector: ShapeOperationSelector,
+    childTurnsToWaitSelector: NumericValueSelector,
     cellProbabilitySelector: BooleanSelector,
     cellSize: number
   ) {
     super(LayerType.Parallelogram, dispatcher);
     this.colorSelector = colorSelector;
+    this.shouldMakeChildSelector = shouldMakeChildSelector;
     this.shapeOperationSelector = shapeOperationSelector;
     this.cellProbabilitySelector = cellProbabilitySelector;
+    this.childTurnsToWaitSelector = childTurnsToWaitSelector
     this.cellSize = cellSize;
     this.shapes = [];
     this.skewAmount = 0.3;
 
     this.defineShapesToDraw(p)
+  }
+
+  makeFutureLayer() {
+    const operation = this.shapeOperationSelector();
+    const layerGenerator = deriveShapeLayerGenerator(this.layerDispatcher, this.shapes, operation)
+    this.layerDispatcher.declareFutureLayer(layerGenerator, this.childTurnsToWaitSelector());
   }
 
   defineShapesToDraw(p: p5): void {
@@ -84,7 +98,12 @@ export class ParallelogramLayer extends Layer {
         }
       }
     }
+
+    if (this.shouldMakeChildSelector()) {
+      this.makeFutureLayer();
+    }
   }
+
 
   draw(p: p5): void {
     for (const shape of this.shapes) {

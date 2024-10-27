@@ -1,5 +1,4 @@
 import { memo, useCallback, useState } from 'react';
-import './App.css';
 import P5DesignCanvas from './P5DesignCanvas';
 import { ImageGenerationPreset } from './p5_image_generation/imageGenPresets';
 import { ALL_IMAGE_PRESETS } from './p5_image_generation/imageGenPresets';
