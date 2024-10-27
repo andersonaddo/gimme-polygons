@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/gimme-polygons/static/css/main.e6c13ad2.css",
+    "main.js": "/gimme-polygons/static/js/main.f9e5ba8b.js",
+    "static/js/453.6e8159e0.chunk.js": "/gimme-polygons/static/js/453.6e8159e0.chunk.js",
+    "index.html": "/gimme-polygons/index.html",
+    "main.e6c13ad2.css.map": "/gimme-polygons/static/css/main.e6c13ad2.css.map",
+    "main.f9e5ba8b.js.map": "/gimme-polygons/static/js/main.f9e5ba8b.js.map",
+    "453.6e8159e0.chunk.js.map": "/gimme-polygons/static/js/453.6e8159e0.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.f9e5ba8b.js"
+  ]
+}
