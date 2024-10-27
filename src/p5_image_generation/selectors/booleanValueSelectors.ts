@@ -70,10 +70,16 @@ function sineBatchSelector(p: p5): BooleanSelector {
   };
 }
 
+/**
+ * ANDs multiple selectors
+ */
 function andSelector(...args: BooleanSelector[]): BooleanSelector {
   return (x?: number, y?: number) => args.map(s => s(x, y)).every(s => s === true)
 }
 
+/**
+ * ORs multiple selectors
+ */
 function orSelector(...args: BooleanSelector[]): BooleanSelector {
   return (x?: number, y?: number) => args.map(s => s(x, y)).some(s => s === true)
 }
