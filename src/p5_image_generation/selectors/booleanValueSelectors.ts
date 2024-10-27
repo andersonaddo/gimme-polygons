@@ -59,9 +59,9 @@ function perlinSelector(p: p5, smoothingFactor: number): BooleanSelector {
  *   and a random cutoff
  */
 function sineBatchSelector(p: p5): BooleanSelector {
-  let counter =  p.random() * 100;
+  let counter = p.random() * 100;
 
-  const randomCutoff = p.random(0.3,1) // Random cutoff for variability
+  const randomCutoff = p.random(0.3, 1) // Random cutoff for variability
 
   return () => {
     counter++;
@@ -70,7 +70,15 @@ function sineBatchSelector(p: p5): BooleanSelector {
   };
 }
 
+function andSelector(...args: BooleanSelector[]): BooleanSelector {
+  return (x?: number, y?: number) => args.map(s => s(x, y)).every(s => s === true)
+}
+
+function orSelector(...args: BooleanSelector[]): BooleanSelector {
+  return (x?: number, y?: number) => args.map(s => s(x, y)).some(s => s === true)
+}
+
 
 // TODO: returns a function that returns batches of true randomly
 
-export const BooleanSelectors = { evenSelector, everyOtherSelector, perlinSelector, randomSelector, always, never , sineBatchSelector};
+export const BooleanSelectors = { evenSelector, everyOtherSelector, perlinSelector, randomSelector, always, never, sineBatchSelector, orSelector, andSelector };
