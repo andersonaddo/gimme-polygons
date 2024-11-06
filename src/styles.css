@@ -1,0 +1,60 @@
+/* Shout-out to:
+ https://www.magicpattern.design/tools/css-backgrounds 
+ https://www.cssmatic.com/box-shadow
+*/
+
+:root {
+    --header-color: #fffff2;
+    --main-color: #fffff2;
+    --secondary-color: #444cf7;
+    --shadow-color: rgba(0, 0, 0, 0.43);
+    /* Used to match what mantine uses */
+    --mantine-border-radius: 0.25em;
+
+}
+
+.app-background {
+    --dot-size: 1.3px;
+    --dot-spread: 21px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    opacity: 0.15;
+    background-color: var(--main-color);
+    background-image: radial-gradient(var(--secondary-color) var(--dot-size), var(--main-color) var(--dot-size));
+    background-size: var(--dot-spread) var(--dot-spread);
+    z-index: -1000;
+}
+
+.app-header {
+    width: 100%;
+    position: sticky;
+    background-color: var(--header-color);
+    top: 0;
+    padding-top: 4px;
+    box-shadow: 0px 0px 20px -1px var(--shadow-color);
+}
+
+.p5-image-parent {
+    line-height: 0;
+    border-radius: var(--mantine-border-radius);
+
+    &:has(canvas) {
+        box-shadow: 3px 3px 23px -1px var(--shadow-color);
+    }
+
+    canvas {
+        border-radius: var(--mantine-border-radius);
+    }
+}
+
+/******************************************************* 
+MANTINE OVERRIDES
+*******************************************************/
+
+/* Fixes some annoying issues where buttons would render over other things incorrectly */
+.mantine-UnstyledButton-root {
+    position: unset
+}

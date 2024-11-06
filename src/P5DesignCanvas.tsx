@@ -37,8 +37,9 @@ function P5DesignCanvas(props: { preset: ImageGenerationPreset }) {
         }
     }, [p5ContainerRef, sketch, p5Context]);
 
+    // Adding the min with and height prevents scroll position from changing when we request new imahes
     return (
-        <div ref={p5ContainerRef} />
+        <div className='p5-image-parent' style={{ minHeight: HEIGHT, minWidth: WIDTH }} ref={p5ContainerRef} />
     );
 }
 
