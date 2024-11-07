@@ -2,28 +2,18 @@ import { ActionIcon, Button, Image, Select, Space, Title } from '@mantine/core';
 import { IconBrandGithub } from '@tabler/icons-react';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { ALL_IMAGE_PRESETS, ImageGenerationPreset } from './p5_image_generation/imageGenPresets';
-import { P5ContextProvider } from './P5Context';
-import P5DesignCanvas from './P5DesignCanvas';
-import { P5DownloadButton } from './P5DownloadButton';
+import { P5Image } from './P5Image';
 import { camelCaseToTitleCase } from './util';
 
 const NUMBER_OF_IMAGES = 10
 
 function ImageListImpl(props: { preset: ImageGenerationPreset }) {
   const indexes = Array.from(Array(NUMBER_OF_IMAGES).keys())
-
   return (
     <div style={{ display: "flex", flexWrap: "wrap", flexDirection: "row", "gap": 24, padding: 16 }}>
       {indexes.map(index =>
         <div key={index}>
-          <P5ContextProvider>
-            <div style={{ display: "flex", flexDirection: "row" }}>
-              <Title order={4}>Image {index + 1}</Title>
-              <Space w="sm" />
-              <P5DownloadButton />
-            </div>
-            <P5DesignCanvas preset={props.preset} />
-          </P5ContextProvider>
+          <P5Image preset={props.preset} title={`Image ${index + 1}`} />
         </div>
       )}
     </div>
@@ -31,7 +21,6 @@ function ImageListImpl(props: { preset: ImageGenerationPreset }) {
 }
 
 const ImageList = memo(ImageListImpl)
-
 
 function App() {
   const [version, setVersion] = useState(0)

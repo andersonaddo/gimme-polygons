@@ -19,15 +19,15 @@ function always(): BooleanSelector {
 /**
  * returns a function that randomly returns true half the time
  */
-function evenSelector(): BooleanSelector {
-  return () => Math.random() < 0.5;
+function evenSelector(p: p5): BooleanSelector {
+  return () => p.random() < 0.5;
 }
 
 /**
  * returns a function that randomly returns true x the time
  */
-function randomSelector(x: number): BooleanSelector {
-  return () => Math.random() < x;
+function randomSelector(p: p5, x: number): BooleanSelector {
+  return () => p.random() < x;
 }
 
 /**

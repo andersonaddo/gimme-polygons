@@ -1,10 +1,11 @@
+import p5 from "p5";
 import { LayerType } from "../layers";
 
 export type LayerTypeSelector = () => LayerType
 
-const polygonOrParallelogramTypeSelector = (polygonLayerChance: number): LayerTypeSelector => {
+const polygonOrParallelogramTypeSelector = (p: p5, polygonLayerChance: number): LayerTypeSelector => {
     return () => {
-        return Math.random() < polygonLayerChance ? LayerType.RegularPolygon : LayerType.Parallelogram
+        return p.random() < polygonLayerChance ? LayerType.RegularPolygon : LayerType.Parallelogram
     }
 }
 
