@@ -1,4 +1,4 @@
-import { createContext, useCallback, useMemo, useRef, useState } from "react";
+import { createContext, memo, useCallback, useMemo, useRef, useState } from "react";
 
 interface P5ContextType {
     p5SaveFunction?: () => void
@@ -8,7 +8,7 @@ interface P5ContextType {
 export const P5Context = createContext<P5ContextType>({})
 
 // This context is designed to be very stable
-export const P5ContextProvider = (props: { children: React.ReactNode }) => {
+const P5ContextProviderImpl = (props: { children: React.ReactNode }) => {
     const [p5SaveFunctionInner, setP5SaveFunction] = useState<(() => void) | undefined>(undefined)
 
     const callbackRef = useRef<(() => void) | undefined>(p5SaveFunctionInner)
@@ -28,3 +28,5 @@ export const P5ContextProvider = (props: { children: React.ReactNode }) => {
         </P5Context.Provider>
     )
 }
+
+export const P5ContextProvider = memo(P5ContextProviderImpl)

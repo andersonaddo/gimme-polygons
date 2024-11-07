@@ -1,45 +1,13 @@
-import { ActionIcon, Button, Image, Select, Space, Title } from '@mantine/core';
+import { ActionIcon, Image, Select, Space, Title } from '@mantine/core';
 import { IconBrandGithub } from '@tabler/icons-react';
 import { memo, useCallback, useMemo, useState } from 'react';
-import { ALL_IMAGE_PRESETS, ImageGenerationPreset } from './p5_image_generation/imageGenPresets';
-import { P5ContextProvider } from './P5Context';
-import P5DesignCanvas from './P5DesignCanvas';
-import { P5DownloadButton } from './P5DownloadButton';
+import { ALL_IMAGE_PRESETS } from './p5_image_generation/imageGenPresets';
 import { camelCaseToTitleCase } from './util';
-
-const NUMBER_OF_IMAGES = 10
-
-function ImageListImpl(props: { preset: ImageGenerationPreset }) {
-  const indexes = Array.from(Array(NUMBER_OF_IMAGES).keys())
-
-  return (
-    <div style={{ display: "flex", flexWrap: "wrap", flexDirection: "row", "gap": 24, padding: 16 }}>
-      {indexes.map(index =>
-        <div key={index}>
-          <P5ContextProvider>
-            <div style={{ display: "flex", flexDirection: "row" }}>
-              <Title order={4}>Image {index + 1}</Title>
-              <Space w="sm" />
-              <P5DownloadButton />
-            </div>
-            <P5DesignCanvas preset={props.preset} />
-          </P5ContextProvider>
-        </div>
-      )}
-    </div>
-  );
-}
-
-const ImageList = memo(ImageListImpl)
+import { P5ImageList } from './P5InfiniteCanvasList';
 
 
 function App() {
-  const [version, setVersion] = useState(0)
   const [chosenPreset, setChosenPreset] = useState(Object.keys(ALL_IMAGE_PRESETS).at(0)!)
-
-  const increaseVersion = useCallback(() => {
-    setVersion(prevVersion => prevVersion + 1)
-  }, [setVersion])
 
   const onPresetChange = useCallback((val: string) => {
     setChosenPreset(val)
@@ -52,17 +20,13 @@ function App() {
 
 
   return (
-    <div>
+    <div style={{ display: "flex", flexDirection: "column", width: "100vw", height: "100vh" }}>
       <div className='app-background' />
 
       <div className='app-header'>
         <div style={{ display: "flex", flexDirection: "row", gap: 8, padding: 4, paddingLeft: 16, alignItems: "center", flexWrap: "wrap" }}>
           <Image src={require("./media/logo.png")} height={20} fit='contain' width={"auto"} />
           <Title order={6}>GIMME POLYGONS!</Title>
-          <Space />
-          <Button onClick={increaseVersion}>
-            Refresh Images
-          </Button>
           <Space />
           <div style={{ minWidth: 50 }}>
             <Select onChange={onPresetChange} value={chosenPreset} data={presetOptions} />
@@ -75,7 +39,9 @@ function App() {
         <div style={{ width: "100%", height: 4, backgroundColor: "black" }} />
       </div>
 
-      <ImageList key={version} preset={ALL_IMAGE_PRESETS[chosenPreset]} />
+      <div style={{ width: "100%", flex: 1, paddingRight: 16, paddingLeft: 16 }}>
+        <P5ImageList preset={ALL_IMAGE_PRESETS[chosenPreset]} />
+      </div>
     </div>
   );
 }

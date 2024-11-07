@@ -1,9 +1,9 @@
 import { ActionIcon } from '@mantine/core';
 import { IconDownload } from '@tabler/icons-react';
-import { useContext } from 'react';
+import { memo, useContext } from 'react';
 import { P5Context } from './P5Context';
 
-export function P5DownloadButton() {
+function P5DownloadButtonImpl() {
     const p5Context = useContext(P5Context)
     return (
         <div>
@@ -13,3 +13,5 @@ export function P5DownloadButton() {
         </div>
     );
 }
+
+export const P5DownloadButton = memo(P5DownloadButtonImpl)

@@ -4,6 +4,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { MantineProvider } from '@mantine/core';
 import './styles.css'
+import 'react-virtualized/styles.css';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
