@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/gimme-polygons/static/css/main.731da63a.css",
-    "main.js": "/gimme-polygons/static/js/main.03307f4d.js",
+    "main.js": "/gimme-polygons/static/js/main.bc4654ec.js",
     "static/js/453.6e8159e0.chunk.js": "/gimme-polygons/static/js/453.6e8159e0.chunk.js",
     "static/media/logo.png": "/gimme-polygons/static/media/logo.7060c3b32e8b093797d7.png",
     "index.html": "/gimme-polygons/index.html",
     "main.731da63a.css.map": "/gimme-polygons/static/css/main.731da63a.css.map",
-    "main.03307f4d.js.map": "/gimme-polygons/static/js/main.03307f4d.js.map",
+    "main.bc4654ec.js.map": "/gimme-polygons/static/js/main.bc4654ec.js.map",
     "453.6e8159e0.chunk.js.map": "/gimme-polygons/static/js/453.6e8159e0.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.731da63a.css",
-    "static/js/main.03307f4d.js"
+    "static/js/main.bc4654ec.js"
   ]
 }
