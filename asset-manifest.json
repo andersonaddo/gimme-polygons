@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/gimme-polygons/static/css/main.731da63a.css",
-    "main.js": "/gimme-polygons/static/js/main.33527d73.js",
+    "main.css": "/gimme-polygons/static/css/main.0ae590b1.css",
+    "main.js": "/gimme-polygons/static/js/main.f2925838.js",
     "static/js/453.6e8159e0.chunk.js": "/gimme-polygons/static/js/453.6e8159e0.chunk.js",
     "static/media/logo.png": "/gimme-polygons/static/media/logo.7060c3b32e8b093797d7.png",
     "index.html": "/gimme-polygons/index.html",
-    "main.731da63a.css.map": "/gimme-polygons/static/css/main.731da63a.css.map",
-    "main.33527d73.js.map": "/gimme-polygons/static/js/main.33527d73.js.map",
+    "main.0ae590b1.css.map": "/gimme-polygons/static/css/main.0ae590b1.css.map",
+    "main.f2925838.js.map": "/gimme-polygons/static/js/main.f2925838.js.map",
     "453.6e8159e0.chunk.js.map": "/gimme-polygons/static/js/453.6e8159e0.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.731da63a.css",
-    "static/js/main.33527d73.js"
+    "static/css/main.0ae590b1.css",
+    "static/js/main.f2925838.js"
   ]
 }
