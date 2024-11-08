@@ -10,9 +10,9 @@ const NUMBER_OF_IMAGES = 10
 function ImageListImpl(props: { preset: ImageGenerationPreset }) {
   const indexes = Array.from(Array(NUMBER_OF_IMAGES).keys())
   return (
-    <div style={{ display: "flex", flexWrap: "wrap", flexDirection: "row", "gap": 24, padding: 16 }}>
+    <div style={{ display: "flex", flexWrap: "wrap", flexDirection: "row" }}>
       {indexes.map(index =>
-        <div key={index}>
+        <div style={{ padding: 16 }} key={index}>
           <P5Image preset={props.preset} title={`Image ${index + 1}`} />
         </div>
       )}
@@ -41,11 +41,11 @@ function App() {
 
 
   return (
-    <div>
+    <div style={{ width: "100vw", height: "100vh", display: "flex", flexDirection: "column" }}>
       <div className='app-background' />
 
       <div className='app-header'>
-        <div style={{ display: "flex", flexDirection: "row", gap: 8, padding: 4, paddingLeft: 16, alignItems: "center", flexWrap: "wrap" }}>
+        <div style={{ display: "flex", flexDirection: "row", gap: 8, padding: 16, paddingTop: 8, paddingBottom: 8, alignItems: "center", flexWrap: "wrap" }}>
           <Image src={require("./media/logo.png")} height={20} fit='contain' width={"auto"} />
           <Title order={6}>GIMME POLYGONS!</Title>
           <Space />
@@ -61,10 +61,11 @@ function App() {
             <IconBrandGithub color='black' />
           </ActionIcon>
         </div>
-        <div style={{ width: "100%", height: 4, backgroundColor: "black" }} />
       </div>
 
-      <ImageList key={version} preset={ALL_IMAGE_PRESETS[chosenPreset]} />
+      <div style={{ flex: 1, width: "100%", overflow: "scroll" }}>
+        <ImageList key={version} preset={ALL_IMAGE_PRESETS[chosenPreset]} />
+      </div>
     </div>
   );
 }
