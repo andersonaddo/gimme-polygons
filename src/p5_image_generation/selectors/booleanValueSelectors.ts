@@ -56,12 +56,12 @@ function perlinSelector(p: p5, smoothingFactor: number): BooleanSelector {
 
 /**
  * returns a function that randomly returns true in batches using sine
- *   and a random cutoff
+ *   and an optional cutoff. If no cutoff provided, uses random cutoff
  */
-function sineBatchSelector(p: p5): BooleanSelector {
+function sineBatchSelector(p: p5, cutoff: number = 0): BooleanSelector {
   let counter = p.random() * 100;
 
-  const randomCutoff = p.random(0.3, 1) // Random cutoff for variability
+  const randomCutoff = cutoff ? cutoff : p.random(0.3, 1) // Random cutoff for variability
 
   return () => {
     counter++;
