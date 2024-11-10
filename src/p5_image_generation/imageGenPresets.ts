@@ -5,7 +5,6 @@ import { BooleanSelectors } from "./selectors/booleanValueSelectors";
 import {
   COLOR_SCHEMES,
   ColorSelectors,
-  DEBUG_COLOR_SCHEME,
 } from "./selectors/colorSelectors";
 import { NumericValueSelectors } from "./selectors/numericValueSelectors";
 import { ShapeOperationSelectors } from "./selectors/shapeOperationSelector";
@@ -31,7 +30,7 @@ const debugPreset1: ImageGenerationPreset = (
   const shouldUsePerlin = BooleanSelectors.everyOtherSelector(2);
 
   const configGenerator: () => PartialLayerDispatcherConfig = () => {
-    const colorScheme = DEBUG_COLOR_SCHEME;
+    const colorScheme = COLOR_SCHEMES["DEBUG"];
     const usingPerlin = shouldUsePerlin();
     const cellProbSelector = usingPerlin
       ? BooleanSelectors.perlinSelector(p, 0.2)
@@ -79,7 +78,7 @@ const debugPreset2: ImageGenerationPreset = (
   height: number
 ) => {
   const configGenerator: () => PartialLayerDispatcherConfig = () => {
-    const colorScheme = DEBUG_COLOR_SCHEME;
+    const colorScheme = COLOR_SCHEMES["DEBUG"];
     const cellProbSelector = BooleanSelectors.evenSelector(p);
     const layerCellColorSelector = ColorSelectors.randomColorSelector(
       p,
@@ -125,7 +124,7 @@ const exampleParallelogramSelector: ImageGenerationPreset = (
   height: number
 ) => {
   const configGenerator: () => PartialLayerDispatcherConfig = () => {
-    const colorScheme = COLOR_SCHEMES[0];
+    const colorScheme = COLOR_SCHEMES["Ocean"];
     const cellProbSelector = BooleanSelectors.randomSelector(p, 0.1);
     const layerCellColorSelector = ColorSelectors.randomColorSelector(
       p,
@@ -168,7 +167,7 @@ const childLayersExample: ImageGenerationPreset = (
       };
     }
 
-    const colorScheme = COLOR_SCHEMES[1];
+    const colorScheme = COLOR_SCHEMES["Sunset"];
     const layerCellSizeSelector = NumericValueSelectors.constantNumberSelector(
       width / 20
     );
@@ -225,7 +224,7 @@ const exampleStripes: ImageGenerationPreset = (
       };
     }
 
-    const colorScheme = COLOR_SCHEMES[0];
+    const colorScheme = COLOR_SCHEMES["Ocean"];
     const cellProbSelector = BooleanSelectors.sineBatchSelector(p);
     const layerCellColorSelector = ColorSelectors.perlinColorSelector(
       p,
@@ -265,7 +264,7 @@ const c1: ImageGenerationPreset = (p: p5, width: number, height: number) => {
   const configGenerator: () => PartialLayerDispatcherConfig = () => {
     layerCount++;
 
-    const colorScheme = COLOR_SCHEMES[3];
+    const colorScheme = COLOR_SCHEMES["Desert"];
     const cellProbSelector = BooleanSelectors.sineBatchSelector(p, -0.85);
     const layerCellColorSelector = ColorSelectors.perlinColorSelector(
       p,
@@ -340,7 +339,7 @@ const c2: ImageGenerationPreset = (p: p5, width: number, height: number) => {
   const configGenerator: () => PartialLayerDispatcherConfig = () => {
     layerCount++;
 
-    const colorScheme = COLOR_SCHEMES[2];
+    const colorScheme = COLOR_SCHEMES["Forest"];
     const layerShouldMakeChildSelector = BooleanSelectors.never();
     const layerCellSizeSelector = NumericValueSelectors.constantNumberSelector(
       width / 20
@@ -352,7 +351,7 @@ const c2: ImageGenerationPreset = (p: p5, width: number, height: number) => {
       return {
         cellColorSelector: ColorSelectors.baseColorSelector(p, colorScheme),
         cellProbabilitySelector: BooleanSelectors.always(),
-        cellSizeSelector:  NumericValueSelectors.constantNumberSelector(5),
+        cellSizeSelector: NumericValueSelectors.constantNumberSelector(5),
         regularPolygonSidesSelector:
           NumericValueSelectors.constantNumberSelector(4),
         shapeRadiusSelector: NumericValueSelectors.constantNumberSelector(5),
@@ -375,15 +374,15 @@ const c2: ImageGenerationPreset = (p: p5, width: number, height: number) => {
     };
   };
 
-  return { layerDispatcherConfigGenerator: configGenerator, numLayers: 3};
+  return { layerDispatcherConfigGenerator: configGenerator, numLayers: 3 };
 };
 
 export const ALL_IMAGE_PRESETS: Record<string, ImageGenerationPreset> = {
-  debugPreset1,
-  debugPreset2,
-  exampleParallelogramSelector,
   childLayersExample,
+  exampleParallelogramSelector,
   exampleStripes,
   c1,
   c2,
+  debugPreset1,
+  debugPreset2,
 };

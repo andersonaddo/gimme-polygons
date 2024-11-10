@@ -65,7 +65,7 @@ function App() {
           </Button>
           <Space />
           <div style={{ minWidth: 50 }}>
-            <Select onChange={onPresetChange} value={chosenPreset} data={presetOptions} />
+            <Select onChange={onPresetChange} value={chosenPreset} data={presetOptions} maxDropdownHeight={500} />
           </div>
           <div style={{ flex: 1 }} />
           <ActionIcon variant="transparent" component="a" href="https://github.com/andersonaddo/gimme-polygons" target="_blank" rel="noopener noreferrer">
