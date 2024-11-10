@@ -9,21 +9,6 @@ const NUMBER_OF_IMAGES = 10
 const IMAGE_LIST_PARENT_ID = "image-list-parent"
 const IMAGE_LIST_ID = "image-list-component"
 
-function ImageListImpl(props: { preset: ImageGenerationPreset }) {
-  const indexes = Array.from(Array(NUMBER_OF_IMAGES).keys())
-  return (
-    <div style={{ display: "flex", flexDirection: "column", width: "fit-content" }}>
-      {indexes.map(index =>
-        <div style={{ padding: 16, width: "fit-content" }} key={index}>
-          <P5Image preset={props.preset} title={`Image ${index + 1}`} />
-        </div>
-      )}
-    </div>
-  );
-}
-
-const ImageList = memo(ImageListImpl)
-
 function App() {
   const [version, setVersion] = useState(0)
   const [chosenPreset, setChosenPreset] = useState(Object.keys(ALL_IMAGE_PRESETS).at(0)!)
@@ -97,5 +82,20 @@ function App() {
     </div>
   );
 }
+
+function ImageListImpl(props: { preset: ImageGenerationPreset }) {
+  const indexes = Array.from(Array(NUMBER_OF_IMAGES).keys())
+  return (
+    <div style={{ display: "flex", flexDirection: "column", width: "fit-content" }}>
+      {indexes.map(index =>
+        <div style={{ padding: 16, width: "fit-content" }} key={index}>
+          <P5Image preset={props.preset} title={`Image ${index + 1}`} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+const ImageList = memo(ImageListImpl)
 
 export default memo(App);
