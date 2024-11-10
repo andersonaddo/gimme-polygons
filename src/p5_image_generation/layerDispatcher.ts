@@ -28,9 +28,9 @@ export type LayerDispatcherConfig = {
   shapeRadiusSelector: NumericValueSelector;
 
   // For layers that make child ShapeLayers
-  shouldMakeChildSelector: BooleanSelector;
+  shouldMakeChildSelector: BooleanSelector; //Note that this is per shape, not for the whole layer
   shapeOperationSelector: ShapeOperationSelector; //Note that this is per shape, not for the whole layer
-  childLayerTurnsToWaitSelector: NumericValueSelector;
+  childLayerTurnsToWaitSelector: NumericValueSelector; // This is for the entire resulting child layer
 };
 
 export type PartialLayerDispatcherConfig = Partial<LayerDispatcherConfig> &

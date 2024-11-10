@@ -7,7 +7,7 @@ export const deriveShapeLayerGenerator = (layerDispatcher: LayerDispatcher, refe
     const copiedShapes: Shape[] = [];
 
     for (const shape of referenceShapes) {
-        const copiedShape = shape.copy();
+        const copiedShape = shape.copy(); // Just for safety so we're not modifying reference values
         copiedShape.operation = shapeOperationSelector?.();
         copiedShapes.push(copiedShape);
     }

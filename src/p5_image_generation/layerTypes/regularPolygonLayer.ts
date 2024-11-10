@@ -18,6 +18,7 @@ export class RegularPolygonLayer extends Layer {
   cellSize: number;
   sides: number;
   shapes: Shape[];
+  shapesForChildLayer: Shape[];
 
   constructor(
     p: p5,
@@ -41,13 +42,14 @@ export class RegularPolygonLayer extends Layer {
     this.cellSize = cellSize;
     this.sides = sides;
     this.shapes = [];
+    this.shapesForChildLayer = [];
     this.defineShapeToDraw(p);
   }
 
   makeFutureLayer() {
     const layerGenerator = deriveShapeLayerGenerator(
       this.layerDispatcher,
-      this.shapes,
+      this.shapesForChildLayer,
       this.shapeOperationSelector
     );
     this.layerDispatcher.declareFutureLayer(
@@ -93,11 +95,12 @@ export class RegularPolygonLayer extends Layer {
           );
 
           this.shapes.push(shape);
+          if (this.shouldMakeChildSelector()) this.shapesForChildLayer.push(shape)
         }
       }
     }
 
-    if (this.shouldMakeChildSelector()) {
+    if (this.shapesForChildLayer.length) {
       this.makeFutureLayer();
     }
   }

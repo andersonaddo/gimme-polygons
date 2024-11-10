@@ -16,6 +16,7 @@ export class ParallelogramLayer extends Layer {
   cellProbabilitySelector: BooleanSelector;
   cellSize: number;
   shapes: Shape[];
+  shapesForChildLayer: Shape[];
   skewAmount: number;
 
   constructor(
@@ -36,13 +37,14 @@ export class ParallelogramLayer extends Layer {
     this.childTurnsToWaitSelector = childTurnsToWaitSelector
     this.cellSize = cellSize;
     this.shapes = [];
+    this.shapesForChildLayer = [];
     this.skewAmount = 0.3;
 
     this.defineShapesToDraw(p)
   }
 
   makeFutureLayer() {
-    const layerGenerator = deriveShapeLayerGenerator(this.layerDispatcher, this.shapes, this.shapeOperationSelector)
+    const layerGenerator = deriveShapeLayerGenerator(this.layerDispatcher, this.shapesForChildLayer, this.shapeOperationSelector)
     this.layerDispatcher.declareFutureLayer(layerGenerator, this.childTurnsToWaitSelector());
   }
 
@@ -93,12 +95,14 @@ export class ParallelogramLayer extends Layer {
             vertices,
             this.colorSelector()
           );
+
           this.shapes.push(shape);
+          if (this.shouldMakeChildSelector()) this.shapesForChildLayer.push(shape)
         }
       }
     }
 
-    if (this.shouldMakeChildSelector()) {
+    if (this.shapesForChildLayer.length) {
       this.makeFutureLayer();
     }
   }
