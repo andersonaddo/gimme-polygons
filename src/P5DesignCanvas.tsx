@@ -3,6 +3,7 @@ import { memo, useCallback, useContext, useEffect, useRef } from 'react';
 import { generateImageDefinition } from './p5_image_generation/imageGen';
 import { ImageGenerationPreset } from './p5_image_generation/imageGenPresets';
 import { P5Context } from './P5Context';
+import { formatDate } from './util';
 
 const HEIGHT = 300
 const WIDTH = 1000
@@ -33,7 +34,8 @@ function P5DesignCanvas(props: { preset: ImageGenerationPreset, seed?: number })
     useEffect(() => {
         if (p5ContainerRef.current) {
             const p5Instance = new p5(sketch, p5ContainerRef.current);
-            p5Context.setP5SaveFunction?.(() => () => p5Instance.saveCanvas(`GIMME POLYGONS ${(new Date()).toISOString()}`))
+            const fileTitle = `GIMME POLYGONS ${formatDate(new Date())} ${props.seed} ${process.env.REACT_APP_GIT_SHA}`
+            p5Context.setP5SaveFunction?.(() => () => p5Instance.saveCanvas(fileTitle))
             return () => {
                 p5Context.setP5SaveFunction?.(undefined)
                 p5Instance.remove()
