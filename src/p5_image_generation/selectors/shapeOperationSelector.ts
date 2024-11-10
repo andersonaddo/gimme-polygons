@@ -10,4 +10,8 @@ const randomOperationSelector = (p: p5): ShapeOperationSelector => {
     }
 }
 
-export const ShapeOperationSelectors = { randomOperationSelector }
+const constantOperationSelector = (operation: ShapeOperation): ShapeOperationSelector => {
+    return () => operation
+}
+
+export const ShapeOperationSelectors = { randomOperationSelector, constantOperationSelector }

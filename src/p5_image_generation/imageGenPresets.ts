@@ -9,6 +9,7 @@ import {
 import { NumericValueSelectors } from "./selectors/numericValueSelectors";
 import { ShapeOperationSelectors } from "./selectors/shapeOperationSelector";
 import { LayerTypeSelectors } from "./selectors/shapeTypeSelector";
+import { DummySelector } from "./selectors/dummySelector";
 
 //Note that these do not have to provide full LayerDispatcherConfigs
 //if they're certain that parts of the config won't be used.
@@ -21,6 +22,11 @@ export type ImageGenerationPreset = (
   layerDispatcherConfigGenerator: () => PartialLayerDispatcherConfig;
   numLayers: number;
 };
+
+// Just here for convenience - see usages to understand
+const DummyPartialLayerDispatcherConfig: PartialLayerDispatcherConfig = {
+  layerTypeSelector: DummySelector("DummyPartialLayerDispatcherConfigLayerTypeSelector")
+}
 
 const debugPreset1: ImageGenerationPreset = (
   p: p5,
@@ -184,7 +190,7 @@ const childLayersExample: ImageGenerationPreset = (
       colorScheme
     );
     const layerOperationSelector =
-      ShapeOperationSelectors.randomOperationSelector(p);
+      ShapeOperationSelectors.constantOperationSelector(ShapeOperationSelectors.randomOperationSelector(p)());
     const layerShouldMakeChildSelector = BooleanSelectors.always();
     const layerTypeSelector =
       LayerTypeSelectors.polygonOrParallelogramTypeSelector(p, 1);
@@ -377,12 +383,75 @@ const c2: ImageGenerationPreset = (p: p5, width: number, height: number) => {
   return { layerDispatcherConfigGenerator: configGenerator, numLayers: 3 };
 };
 
+const lava: ImageGenerationPreset = (p: p5, width: number, height: number) => {
+  let layerCount = -1;
+
+  const configGenerator: () => PartialLayerDispatcherConfig = () => {
+    const colorScheme = COLOR_SCHEMES["Lava"];
+
+    layerCount++;
+
+    if (layerCount === 0) {
+      return {
+        cellColorSelector: () => colorScheme.colors[0],
+        layerTypeSelector: () => LayerType.Background,
+      };
+    }
+
+    if (layerCount === 1) {
+      return {
+        layerTypeSelector: LayerTypeSelectors.polygonOrParallelogramTypeSelector(p, 0.7),
+        cellSizeSelector: NumericValueSelectors.boundRandomSelector(p, 3, 6),
+        regularPolygonSidesSelector: NumericValueSelectors.constantNumberSelector(4),
+        shapeRadiusSelector: NumericValueSelectors.boundRandomSelector(p, 3, 6),
+        cellColorSelector: ColorSelectors.baseColorSelector(p, colorScheme),
+        cellProbabilitySelector: BooleanSelectors.always(),
+        shouldMakeChildSelector: BooleanSelectors.never(),
+      };
+    }
+
+    if (layerCount === 2) {
+      return {
+        layerTypeSelector: LayerTypeSelectors.polygonOrParallelogramTypeSelector(p, 1),
+        cellSizeSelector: NumericValueSelectors.boundRandomSelector(p, 5, 6),
+        regularPolygonSidesSelector: NumericValueSelectors.boundRandomSelector(p, 6, 9),
+        shapeRadiusSelector: NumericValueSelectors.boundRandomSelector(p, 3, 6),
+        cellColorSelector: ColorSelectors.accentColorSelector(p, colorScheme),
+        cellProbabilitySelector: BooleanSelectors.andSelector(BooleanSelectors.sineBatchSelector(p), BooleanSelectors.randomSelector(p, 0.4)),
+        shouldMakeChildSelector: BooleanSelectors.randomSelector(p, 0.7),
+        shapeOperationSelector: ShapeOperationSelectors.randomOperationSelector(p),
+        childLayerTurnsToWaitSelector: NumericValueSelectors.constantNumberSelector(0)
+      };
+    }
+
+    // This is a tricky one. It can either be the child layer of the previous layer, or
+    // a brand new one, if the previous layer didn't end up making a child layer
+    if (layerCount === 3) {
+      return {
+        layerTypeSelector: LayerTypeSelectors.polygonOrParallelogramTypeSelector(p, 1),
+        cellSizeSelector: NumericValueSelectors.boundRandomSelector(p, 5, 6),
+        regularPolygonSidesSelector: NumericValueSelectors.boundRandomSelector(p, 6, 9),
+        shapeRadiusSelector: NumericValueSelectors.boundRandomSelector(p, 3, 6),
+        cellColorSelector: ColorSelectors.randomColorSelector(p, colorScheme),
+        cellProbabilitySelector: BooleanSelectors.andSelector(BooleanSelectors.sineBatchSelector(p), BooleanSelectors.randomSelector(p, 0.4)),
+        shouldMakeChildSelector: BooleanSelectors.never()
+      };
+    }
+
+    return DummyPartialLayerDispatcherConfig;
+  };
+
+  return { layerDispatcherConfigGenerator: configGenerator, numLayers: 4 };
+};
+
+
 export const ALL_IMAGE_PRESETS: Record<string, ImageGenerationPreset> = {
   childLayersExample,
   exampleParallelogramSelector,
   exampleStripes,
   c1,
   c2,
+  lava,
   debugPreset1,
   debugPreset2,
 };

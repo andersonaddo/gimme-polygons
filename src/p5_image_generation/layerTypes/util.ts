@@ -1,13 +1,14 @@
 import { LayerDispatcher, LayerDispatcherConfig } from "../layerDispatcher";
-import { Shape, ShapeOperation } from "../shape";
+import { ShapeOperationSelector } from "../selectors/shapeOperationSelector";
+import { Shape } from "../shape";
 import { ShapeLayer } from "./shapeLayer";
 
-export const deriveShapeLayerGenerator = (layerDispatcher: LayerDispatcher, referenceShapes: Shape[], shapeOperation?: ShapeOperation) => {
+export const deriveShapeLayerGenerator = (layerDispatcher: LayerDispatcher, referenceShapes: Shape[], shapeOperationSelector?: ShapeOperationSelector) => {
     const copiedShapes: Shape[] = [];
 
     for (const shape of referenceShapes) {
         const copiedShape = shape.copy();
-        copiedShape.operation = shapeOperation;
+        copiedShape.operation = shapeOperationSelector?.();
         copiedShapes.push(copiedShape);
     }
 

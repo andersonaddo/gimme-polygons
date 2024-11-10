@@ -27,6 +27,7 @@ function evenSelector(p: p5): BooleanSelector {
  * returns a function that randomly returns true x the time
  */
 function randomSelector(p: p5, x: number): BooleanSelector {
+  if (x > 1 || x < 0) throw Error("Invalid parameter for randomSelector")
   return () => p.random() < x;
 }
 

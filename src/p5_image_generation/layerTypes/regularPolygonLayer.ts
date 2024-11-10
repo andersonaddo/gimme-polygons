@@ -45,11 +45,10 @@ export class RegularPolygonLayer extends Layer {
   }
 
   makeFutureLayer() {
-    const operation = this.shapeOperationSelector();
     const layerGenerator = deriveShapeLayerGenerator(
       this.layerDispatcher,
       this.shapes,
-      operation
+      this.shapeOperationSelector
     );
     this.layerDispatcher.declareFutureLayer(
       layerGenerator,

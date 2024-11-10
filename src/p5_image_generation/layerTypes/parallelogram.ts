@@ -42,8 +42,7 @@ export class ParallelogramLayer extends Layer {
   }
 
   makeFutureLayer() {
-    const operation = this.shapeOperationSelector();
-    const layerGenerator = deriveShapeLayerGenerator(this.layerDispatcher, this.shapes, operation)
+    const layerGenerator = deriveShapeLayerGenerator(this.layerDispatcher, this.shapes, this.shapeOperationSelector)
     this.layerDispatcher.declareFutureLayer(layerGenerator, this.childTurnsToWaitSelector());
   }
 
@@ -60,7 +59,7 @@ export class ParallelogramLayer extends Layer {
 
           let vertices: p5.Vector[] = [];
 
-          // TODO: better parametize the directions of the parallelograms
+          // TODO: better parametrize the directions of the parallelograms
           //    I'm thinking column alternate, all same
           if (dir) {
             vertices.push(

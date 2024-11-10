@@ -10,5 +10,5 @@ export interface Image {
 // The order of the colors in the colors array can communicate that for now
 export interface ColorScheme<T extends string = string> {
     name: T
-    colors: readonly string[]
+    colors: readonly [string, string, string, string, string]
 }

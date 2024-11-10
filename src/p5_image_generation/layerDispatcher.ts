@@ -29,7 +29,7 @@ export type LayerDispatcherConfig = {
 
   // For layers that make child ShapeLayers
   shouldMakeChildSelector: BooleanSelector;
-  shapeOperationSelector: ShapeOperationSelector;
+  shapeOperationSelector: ShapeOperationSelector; //Note that this is per shape, not for the whole layer
   childLayerTurnsToWaitSelector: NumericValueSelector;
 };
 
@@ -48,26 +48,29 @@ export class LayerDispatcher {
   }
 
   private assureFunc<T extends ((...args: any[]) => any) | undefined>(
-    func: T
+    func: T,
+    name?: string
   ): NonNullable<T> {
-    return func ?? (DummySelector as NonNullable<T>);
+    return func ?? (DummySelector(name) as NonNullable<T>);
   }
 
   private getFullConfig(): LayerDispatcherConfig {
     const config = this.configGenerator();
     return {
-      layerTypeSelector: this.assureFunc(config.layerTypeSelector),
-      cellColorSelector: this.assureFunc(config.cellColorSelector),
-      cellProbabilitySelector: this.assureFunc(config.cellProbabilitySelector),
-      cellSizeSelector: this.assureFunc(config.cellSizeSelector),
+      layerTypeSelector: this.assureFunc(config.layerTypeSelector, "layerTypeSelector"),
+      cellColorSelector: this.assureFunc(config.cellColorSelector, "cellColorSelector"),
+      cellProbabilitySelector: this.assureFunc(config.cellProbabilitySelector, "cellProbabilitySelector"),
+      cellSizeSelector: this.assureFunc(config.cellSizeSelector, "cellSizeSelector"),
       regularPolygonSidesSelector: this.assureFunc(
-        config.regularPolygonSidesSelector
+        config.regularPolygonSidesSelector,
+        "regularPolygonSidesSelector"
       ),
-      shapeRadiusSelector: this.assureFunc(config.shapeRadiusSelector),
-      shouldMakeChildSelector: this.assureFunc(config.shouldMakeChildSelector),
-      shapeOperationSelector: this.assureFunc(config.shapeOperationSelector),
+      shapeRadiusSelector: this.assureFunc(config.shapeRadiusSelector, "shapeRadiusSelector"),
+      shouldMakeChildSelector: this.assureFunc(config.shouldMakeChildSelector, "shouldMakeChildSelector"),
+      shapeOperationSelector: this.assureFunc(config.shapeOperationSelector, "shapeOperationSelector"),
       childLayerTurnsToWaitSelector: this.assureFunc(
-        config.childLayerTurnsToWaitSelector
+        config.childLayerTurnsToWaitSelector,
+        "childLayerTurnsToWaitSelector"
       ),
     };
   }
