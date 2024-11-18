@@ -1,8 +1,6 @@
 import { type Layer } from "./layers"
 
 export interface Image {
-    height: number
-    width: number
     layers: Layer[]
 }
 

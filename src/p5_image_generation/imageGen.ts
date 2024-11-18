@@ -7,13 +7,11 @@ export const generateImageDefinition = (
   p: p5,
   preset: ImageGenerationPreset
 ): Image => {
-  const params = preset(p, p.width, p.height)
+  const params = preset.getPreset(p, p.width, p.height)
   const layerDispatcher = new LayerDispatcher(params.layerDispatcherConfigGenerator);
   const layers = layerDispatcher.generateLayers(params.numLayers, p);
 
   return {
-    height: p.height,
-    width: p.width,
     layers,
   };
 };
